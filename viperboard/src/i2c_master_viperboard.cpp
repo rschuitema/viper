@@ -1,5 +1,5 @@
 
-#include "i2c_master.h"
+#include "i2c_master_viperboard.h"
 
 namespace Viperboard
 {

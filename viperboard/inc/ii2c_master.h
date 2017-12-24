@@ -14,7 +14,7 @@ namespace Viperboard
         virtual ViperResult_t Write(unsigned char slave_address, unsigned char register_address, int length, unsigned char* pBuffer)=0;
         virtual ViperResult_t Read(unsigned char slave_address, unsigned char register_address, int length, unsigned char* pBuffer)=0;
         
-    }
+    };
 }
 
 #endif
