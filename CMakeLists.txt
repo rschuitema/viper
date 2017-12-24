@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.2)
 
 project(viperboard)
 
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 ## section: add definitions
 #   add prefix -D. example> -DSHP
 #  - DO NOT add  the following definitions(already defined in ${OSP_DEFINITIONS}:
