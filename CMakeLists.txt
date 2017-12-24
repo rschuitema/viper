@@ -39,5 +39,9 @@ set(CMAKE_CXX_FLAGS "-Wall \
                      -Wno-parentheses \
                      -fdiagnostics-show-option ${CMAKE_CXX_FLAGS}")
 
+include(googletest)
+
+enable_testing()
+
 
 add_subdirectory(viperboard)

@@ -15,3 +15,5 @@ set(
 
 add_library(viperboard ${VIPERBOARD_SOURCE_FILES})
 
+add_subdirectory(test)
+

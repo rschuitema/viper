@@ -15,11 +15,11 @@ ExternalProject_Add(
     INSTALL_COMMAND ""
     BUILD_BYPRODUCTS ${GTEST_DIR}/libgmock.a
                      ${GTEST_DIR}/libgmock_main.a
-                     ${GTEST_DIR}/libgtest.a
+                     ${GTEST_DIR}/gtest/libgtest.a
 )
 
 add_library(gtest STATIC IMPORTED)
-SET_PROPERTY(TARGET gtest PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/libgtest.a)
+SET_PROPERTY(TARGET gtest PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/gtest/libgtest.a)
 
 add_library(gmock STATIC IMPORTED)
 SET_PROPERTY(TARGET gmock PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/libgmock.a)
