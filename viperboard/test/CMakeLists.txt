@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.2)
 
+add_library(usb_mock STATIC libusb_mock.cpp)
+add_dependencies(usb_mock googletest)
+target_include_directories(usb_mock PUBLIC ${GTEST_INCLUDE})
+target_link_libraries(usb_mock ${GTEST_LIBRARIES})
+
 add_executable(test_viperboard test_viperboard.cpp)
-target_include_directories(test_viperboard PUBLIC ${GTEST_INCLUDE})
-target_link_libraries(test_viperboard ${GTEST_LIBRARIES})
+target_link_libraries(test_viperboard usb_mock)
 add_test(Viperboard test_viperboard)
