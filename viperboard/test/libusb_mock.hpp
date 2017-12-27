@@ -1,10 +1,11 @@
 #pragma once
 
 #include <stdint.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 #include <libusb.h>
+#pragma GCC diagnostic pop
 #include "gmock/gmock.h"
-
-#include "BoostTestAdapter.hpp"
 
 typedef int32_t STATUS_T;
 
