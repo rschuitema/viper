@@ -4,10 +4,11 @@ project(viperboard)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
-
+message(STATUS CMAKE_BUILD_TYPE)
 if(CMAKE_BUILD_TYPE MATCHES Debug)
+    message(STATUS "build type is Debug")
     option(CREATE_COVERAGE_TARGETS "Create targets to run unit tests with coverage" OFF)
-    if(create_coverage_targets)
+    if(CREATE_COVERAGE_TARGETS)
         message(STATUS "Adding targets for measuring code coverage")
         include(CodeCoverage)
         append_coverage_compiler_flags()
@@ -20,7 +21,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
 
         configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run_all_unit_tests.sh
                        ${CMAKE_CURRENT_BINARY_DIR}/run_all_unit_tests.sh COPYONLY)
-        setup_target_for_coverage(NAME complete_coverage
+        SETUP_TARGET_FOR_COVERAGE(NAME complete_coverage
                                   EXECUTABLE
                                       ${CMAKE_CURRENT_BINARY_DIR}/run_all_unit_tests.sh
                                   DEPENDENCIES
