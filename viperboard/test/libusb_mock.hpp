@@ -51,6 +51,7 @@ public:
     MOCK_METHOD3(get_port_numbers, int(libusb_device*, uint8_t*, int));
 
     MOCK_METHOD2(open, int(libusb_device *dev, libusb_device_handle **handle));
+    MOCK_METHOD3(open_device_with_vid_pid, libusb_device_handle*(libusb_context*, uint16_t, uint16_t));
     MOCK_METHOD1(close, void(libusb_device_handle *handle));
     MOCK_METHOD4(get_string_descriptor_ascii, int(libusb_device_handle *dev, uint8_t desc_index, unsigned char *data, int length));
 

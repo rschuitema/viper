@@ -75,6 +75,11 @@ extern "C" {
         return pLibUsbMock->open(dev, handle);
    }
 
+   libusb_device_handle* libusb_open_device_with_vid_pid(libusb_context *ctx, uint16_t vendor_id, uint16_t product_id)
+   {
+        return pLibUsbMock->open_device_with_vid_pid(ctx, vendor_id, product_id);
+   }
+
    void libusb_close(libusb_device_handle *handle)
    {
         pLibUsbMock->close(handle);

@@ -4,6 +4,9 @@
 
 namespace Viper
 {
+    const uint16_t VIPERBOARD_PRODUCT_ID = 0x1005;
+    const uint16_t VIPERBOARD_VENDOR_ID  = 0x2058;
+    
     Viperboard::Viperboard()
     {
         int result = LIBUSB_SUCCESS;
@@ -41,10 +44,14 @@ namespace Viper
 
     ViperResult_t Viperboard::Open(void)
     {
-        int result = 0;
-
-        result = libusb_init(&usbcontext);
-        
-        return VIPER_SUCCESS;
+        usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
+        if (usbdevicehandle)
+        {
+            return VIPER_SUCCESS;
+        }
+        else
+        {
+            return VIPER_HW_NOT_FOUND;
+        }
     }
 }
