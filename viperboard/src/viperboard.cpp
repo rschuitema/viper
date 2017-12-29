@@ -62,7 +62,15 @@ namespace Viper
                 }
                 case 1:
                 {
-                    result = VIPER_SUCCESS;
+                    int detached = libusb_detach_kernel_driver(usbdevicehandle, 0);
+                    if (detached == 0)
+                    {
+                        result = VIPER_SUCCESS;
+                    }
+                    else
+                    {
+                        result = VIPER_HW_NOT_FOUND;
+                    }
                     break;
                 }
                 case LIBUSB_ERROR_NO_DEVICE:
