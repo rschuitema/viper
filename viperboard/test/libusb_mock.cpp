@@ -85,6 +85,11 @@ extern "C" {
         pLibUsbMock->close(handle);
    }
 
+   int libusb_kernel_driver_active(libusb_device_handle* handle, int interface_number)
+   {
+       return pLibUsbMock->kernel_driver_active(handle, interface_number);
+   }
+   
    int libusb_get_string_descriptor_ascii(libusb_device_handle *dev, uint8_t desc_index, unsigned char *data, int length)
    {
         return pLibUsbMock->get_string_descriptor_ascii(dev, desc_index, data, length);

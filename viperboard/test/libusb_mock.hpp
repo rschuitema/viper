@@ -53,6 +53,7 @@ public:
     MOCK_METHOD2(open, int(libusb_device *dev, libusb_device_handle **handle));
     MOCK_METHOD3(open_device_with_vid_pid, libusb_device_handle*(libusb_context*, uint16_t, uint16_t));
     MOCK_METHOD1(close, void(libusb_device_handle *handle));
+    MOCK_METHOD2(kernel_driver_active, int(libusb_device_handle*, int));
     MOCK_METHOD4(get_string_descriptor_ascii, int(libusb_device_handle *dev, uint8_t desc_index, unsigned char *data, int length));
 
     MOCK_METHOD3(handle_events_timeout_completed, int(libusb_context*, struct timeval*, int*));

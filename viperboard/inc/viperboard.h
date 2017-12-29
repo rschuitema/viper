@@ -19,6 +19,8 @@ namespace Viper
         Viperboard(void);
         virtual ~Viperboard(void);
 
+        /// Opens the viperboard devic. 
+        /// After opening the device it can be used to for I2C, SPI and GPIO activities
         ViperResult_t Open(void);
         ViperResult_t Close(void);
         

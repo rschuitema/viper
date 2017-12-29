@@ -41,7 +41,8 @@ namespace Viper
             // never throw from a destructor
         }
     }
-
+    
+    // Opens the device for specific vid and pid
     ViperResult_t Viperboard::Open(void)
     {
         usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
