@@ -45,14 +45,44 @@ namespace Viper
     // Opens the device for specific vid and pid
     ViperResult_t Viperboard::Open(void)
     {
+        ViperResult_t result;
+        
         usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
         if (usbdevicehandle)
         {
-            return VIPER_SUCCESS;
+            int value = LIBUSB_ERROR_OTHER;
+            value = libusb_kernel_driver_active(usbdevicehandle, 0);
+            
+            switch(value)
+            {
+                case 0:
+                {
+                    result = VIPER_SUCCESS;
+                    break;
+                }
+                case 1:
+                {
+                    result = VIPER_OTHER_ERROR;
+                    break;
+                }
+                case LIBUSB_ERROR_NO_DEVICE:
+                {
+                    result = VIPER_HW_NOT_FOUND;
+                    break;
+                }
+                default:
+                {   
+                    result = VIPER_OTHER_ERROR;
+                    break;
+                }
+            }
+            
         }
         else
         {
-            return VIPER_HW_NOT_FOUND;
+            result = VIPER_HW_NOT_FOUND;
         }
+        
+        return result;
     }
 }
