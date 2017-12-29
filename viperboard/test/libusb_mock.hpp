@@ -86,7 +86,8 @@ public:
     MOCK_METHOD2(clear_halt, int(libusb_device_handle *dev, unsigned char endpoint));
     MOCK_METHOD1(reset_device, int(libusb_device_handle *dev));
 
-    MOCK_METHOD2(get_configuration, int(libusb_device_handle *dev, int *config));
+    MOCK_METHOD2(get_configuration, int(libusb_device_handle *handle, int *config));
+    MOCK_METHOD2(set_configuration, int(libusb_device_handle *handle, int config));
 };
 
 

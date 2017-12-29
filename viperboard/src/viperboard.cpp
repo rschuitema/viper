@@ -7,6 +7,8 @@ namespace Viper
     const uint16_t VIPERBOARD_PRODUCT_ID = 0x1005;
     const uint16_t VIPERBOARD_VENDOR_ID  = 0x2058;
     
+    static ViperResult_t UsbResult2ViperResult(int ubsresult);
+    
     Viperboard::Viperboard()
     {
         int result = LIBUSB_SUCCESS;
@@ -42,21 +44,41 @@ namespace Viper
         }
     }
     
-    // Detach kernel driver if it is active
-    ViperResult_t Viperboard::DetachActiveKernelDriver(libusb_device_handle* devicehandle)
+    
+    // Opens the device for specific vid and pid
+    ViperResult_t Viperboard::Open(void)
     {
-        ViperResult_t result = VIPER_OTHER_ERROR;
-        int value = LIBUSB_ERROR_OTHER;
+        int result;
         
-        value = libusb_kernel_driver_active(devicehandle, 0);
-        if (value == 1)
+        usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
+        if (usbdevicehandle)
         {
-            value = libusb_detach_kernel_driver(devicehandle, 0);   
+            result = libusb_kernel_driver_active(usbdevicehandle, 0);
+            if (result == 1)
+            {
+                result = libusb_detach_kernel_driver(usbdevicehandle, 0);   
+            }
+            
+            if (LIBUSB_SUCCESS == result)
+            {
+                result = libusb_set_configuration(usbdevicehandle, 1);
+            }
+        }
+        else
+        {
+            result = LIBUSB_ERROR_NO_DEVICE;
         }
         
-        switch(value)
+        return UsbResult2ViperResult(result);
+    }
+    
+    ViperResult_t UsbResult2ViperResult(int usbresult)
+    {
+        ViperResult_t result = VIPER_OTHER_ERROR;
+        
+        switch(usbresult)
         {
-            case 0:
+            case LIBUSB_SUCCESS:
             {
                 result = VIPER_SUCCESS;
                 break;
@@ -80,21 +102,4 @@ namespace Viper
         
     }
     
-    // Opens the device for specific vid and pid
-    ViperResult_t Viperboard::Open(void)
-    {
-        ViperResult_t result;
-        
-        usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
-        if (usbdevicehandle)
-        {
-            result = DetachActiveKernelDriver(usbdevicehandle);
-        }
-        else
-        {
-            result = VIPER_HW_NOT_FOUND;
-        }
-        
-        return result;
-    }
 }

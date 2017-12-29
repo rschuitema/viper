@@ -152,6 +152,7 @@ extern "C" {
     {
         return pLibUsbMock->claim_interface(dev, interface_number);
     }
+    
     int libusb_release_interface(libusb_device_handle *dev, int interface_number)
     {
         return pLibUsbMock->release_interface(dev, interface_number);
@@ -161,12 +162,20 @@ extern "C" {
     {
         return pLibUsbMock->clear_halt(dev, endpoint);
     }
+    
     int libusb_reset_device(libusb_device_handle *dev)
     {
         return pLibUsbMock->reset_device(dev);
     }
-    int libusb_get_configuration(libusb_device_handle *dev, int *config)
+    
+    int libusb_get_configuration(libusb_device_handle *handle, int *config)
     {
-        return pLibUsbMock->get_configuration(dev, config);
+        return pLibUsbMock->get_configuration(handle, config);
     }
+    
+    int libusb_set_configuration(libusb_device_handle *handle, int config)
+    {
+        return pLibUsbMock->set_configuration(handle, config);
+    }
+    
 }
