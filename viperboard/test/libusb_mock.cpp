@@ -90,6 +90,11 @@ extern "C" {
        return pLibUsbMock->kernel_driver_active(handle, interface_number);
    }
    
+   int libusb_detach_kernel_driver(libusb_device_handle* handle, int interface_number)
+   {
+       return pLibUsbMock->detach_kernel_driver(handle, interface_number);
+   }
+
    int libusb_get_string_descriptor_ascii(libusb_device_handle *dev, uint8_t desc_index, unsigned char *data, int length)
    {
         return pLibUsbMock->get_string_descriptor_ascii(dev, desc_index, data, length);

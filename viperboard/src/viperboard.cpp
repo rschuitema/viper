@@ -62,7 +62,7 @@ namespace Viper
                 }
                 case 1:
                 {
-                    result = VIPER_OTHER_ERROR;
+                    result = VIPER_SUCCESS;
                     break;
                 }
                 case LIBUSB_ERROR_NO_DEVICE:

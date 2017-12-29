@@ -76,7 +76,7 @@ TEST(ViperboardTest, DestructionDoesNotThrowException)
 }
 
 
-TEST(ViperboardTest, OpenSuccess)
+TEST(ViperboardTest, OpenKernelDriverNotActiveSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
@@ -89,6 +89,27 @@ TEST(ViperboardTest, OpenSuccess)
 
     EXPECT_CALL(*pLibUsbMock, open_device_with_vid_pid(_, Eq(VIPERBOARD_VENDOR_ID), Eq(VIPERBOARD_PRODUCT_ID))).WillOnce(Return(&handle));
     EXPECT_CALL(*pLibUsbMock, kernel_driver_active(_, Eq(0))).WillOnce(Return(0));
+    result = pViper->Open();
+    
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    
+    delete pLibUsbMock;
+}
+
+TEST(ViperboardTest, OpenKernelDriverActiveSuccess)
+{
+    libusb_context context;
+    libusb_device_handle handle;
+    Viperboard* pViper = nullptr;
+    ViperResult_t result = VIPER_TRANSACTION_FAILURE;
+    pLibUsbMock = new LibUsbMock();
+
+    EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
+    pViper = new Viperboard();
+
+    EXPECT_CALL(*pLibUsbMock, open_device_with_vid_pid(_, Eq(VIPERBOARD_VENDOR_ID), Eq(VIPERBOARD_PRODUCT_ID))).WillOnce(Return(&handle));
+    EXPECT_CALL(*pLibUsbMock, kernel_driver_active(_, Eq(0))).WillOnce(Return(1));
+    EXPECT_CALL(*pLibUsbMock, detach_kernel_driver(_, Eq(0))).WillOnce(Return(0));
     result = pViper->Open();
     
     ASSERT_EQ(VIPER_SUCCESS, result);
