@@ -28,7 +28,10 @@ namespace Viper
         void SetI2CSlave(II2C_Slave* slave);
         
         ViperResult_t Revision(void);
-        
+
+    private:
+        ViperResult_t DetachActiveKernelDriver(libusb_device_handle* devicehandle);
+
     private:
         libusb_context* usbcontext = nullptr;
         libusb_device* usbdevice = nullptr;

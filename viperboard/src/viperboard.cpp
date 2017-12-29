@@ -42,6 +42,44 @@ namespace Viper
         }
     }
     
+    // Detach kernel driver if it is active
+    ViperResult_t Viperboard::DetachActiveKernelDriver(libusb_device_handle* devicehandle)
+    {
+        ViperResult_t result = VIPER_OTHER_ERROR;
+        int value = LIBUSB_ERROR_OTHER;
+        
+        value = libusb_kernel_driver_active(devicehandle, 0);
+        if (value == 1)
+        {
+            value = libusb_detach_kernel_driver(devicehandle, 0);   
+        }
+        
+        switch(value)
+        {
+            case 0:
+            {
+                result = VIPER_SUCCESS;
+                break;
+            }
+            case LIBUSB_ERROR_NO_DEVICE:
+            {
+                result = VIPER_HW_NOT_FOUND;
+                break;
+            }
+            case LIBUSB_ERROR_NOT_FOUND:
+            case LIBUSB_ERROR_INVALID_PARAM:
+            case LIBUSB_ERROR_NOT_SUPPORTED:
+            default:
+            {   
+                result = VIPER_OTHER_ERROR;
+                break;
+            }
+        }
+        
+        return result;
+        
+    }
+    
     // Opens the device for specific vid and pid
     ViperResult_t Viperboard::Open(void)
     {
@@ -50,41 +88,7 @@ namespace Viper
         usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
         if (usbdevicehandle)
         {
-            int value = LIBUSB_ERROR_OTHER;
-            value = libusb_kernel_driver_active(usbdevicehandle, 0);
-            
-            switch(value)
-            {
-                case 0:
-                {
-                    result = VIPER_SUCCESS;
-                    break;
-                }
-                case 1:
-                {
-                    int detached = libusb_detach_kernel_driver(usbdevicehandle, 0);
-                    if (detached == 0)
-                    {
-                        result = VIPER_SUCCESS;
-                    }
-                    else
-                    {
-                        result = VIPER_HW_NOT_FOUND;
-                    }
-                    break;
-                }
-                case LIBUSB_ERROR_NO_DEVICE:
-                {
-                    result = VIPER_HW_NOT_FOUND;
-                    break;
-                }
-                default:
-                {   
-                    result = VIPER_OTHER_ERROR;
-                    break;
-                }
-            }
-            
+            result = DetachActiveKernelDriver(usbdevicehandle);
         }
         else
         {
