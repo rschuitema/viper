@@ -16,7 +16,7 @@ using namespace Viper;
 #define VIPERBOARD_VENDOR_ID  (0x2058)
 #define VIPERBOARD_PRODUCT_ID (0x1005)
 
-class ViperboardTest : public ::testing::Test
+class ViperboardOpenCloseTest : public ::testing::Test
 {
     protected:
         virtual void SetUp()
@@ -32,7 +32,7 @@ class ViperboardTest : public ::testing::Test
 };
 
 
-TEST_F(ViperboardTest, ConstructionDesctuctionSuccess)
+TEST_F(ViperboardOpenCloseTest, ConstructionDesctuctionSuccess)
 {
     libusb_context context;
     
@@ -46,7 +46,7 @@ TEST_F(ViperboardTest, ConstructionDesctuctionSuccess)
     delete pViper;
 }
 
-TEST_F(ViperboardTest, ConstructionThrowExceptionNullPointer)
+TEST_F(ViperboardOpenCloseTest, ConstructionThrowExceptionNullPointer)
 {
     Viperboard* pViper = nullptr;
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(Return(LIBUSB_SUCCESS));
@@ -57,7 +57,7 @@ TEST_F(ViperboardTest, ConstructionThrowExceptionNullPointer)
     delete pViper;
 }
 
-TEST_F(ViperboardTest, ConstructionThrowExceptionFailed)
+TEST_F(ViperboardOpenCloseTest, ConstructionThrowExceptionFailed)
 {
     Viperboard* pViper = nullptr;
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(Return(LIBUSB_ERROR_OTHER));
@@ -68,7 +68,7 @@ TEST_F(ViperboardTest, ConstructionThrowExceptionFailed)
     delete pViper;
 }
 
-TEST_F(ViperboardTest, DestructionDoesNotThrowException)
+TEST_F(ViperboardOpenCloseTest, DestructionDoesNotThrowException)
 {
     libusb_context context;
     Viperboard* pViper = nullptr;
@@ -84,7 +84,7 @@ TEST_F(ViperboardTest, DestructionDoesNotThrowException)
 }
 
 
-TEST_F(ViperboardTest, OpenKernelDriverNotActiveSuccess)
+TEST_F(ViperboardOpenCloseTest, OpenKernelDriverNotActiveSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
@@ -106,7 +106,7 @@ TEST_F(ViperboardTest, OpenKernelDriverNotActiveSuccess)
     
 }
 
-TEST_F(ViperboardTest, OpenKernelDriverActiveSuccess)
+TEST_F(ViperboardOpenCloseTest, OpenKernelDriverActiveSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
@@ -129,7 +129,7 @@ TEST_F(ViperboardTest, OpenKernelDriverActiveSuccess)
     
 }
 
-TEST_F(ViperboardTest, OpenFailsDeviceNotFound)
+TEST_F(ViperboardOpenCloseTest, OpenFailsDeviceNotFound)
 {
     libusb_context context;
     libusb_device_handle handle;
@@ -146,7 +146,7 @@ TEST_F(ViperboardTest, OpenFailsDeviceNotFound)
     
 }
 
-TEST_F(ViperboardTest, CloseSuccess)
+TEST_F(ViperboardOpenCloseTest, CloseSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
