@@ -89,7 +89,7 @@ namespace Viper
     
     ViperResult_t Viperboard::Close(void)
     {
-        return VIPER_OTHER_ERROR;
+        return VIPER_SUCCESS;
     }
     
     ViperResult_t UsbResult2ViperResult(int usbresult)
