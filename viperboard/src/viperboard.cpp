@@ -7,6 +7,8 @@ namespace Viper
     const uint16_t VIPERBOARD_PRODUCT_ID = 0x1005;
     const uint16_t VIPERBOARD_VENDOR_ID  = 0x2058;
     
+    const int BUFFER_SIZE = 512;
+    
     static ViperResult_t UsbResult2ViperResult(int ubsresult);
     
     Viperboard::Viperboard()
@@ -49,6 +51,8 @@ namespace Viper
     ViperResult_t Viperboard::Open(void)
     {
         int result;
+        unsigned char buffer[BUFFER_SIZE];
+        int transferred = 0;
         
         usbdevicehandle = libusb_open_device_with_vid_pid(usbcontext, VIPERBOARD_VENDOR_ID, VIPERBOARD_PRODUCT_ID);
         if (usbdevicehandle)
@@ -68,6 +72,12 @@ namespace Viper
             {
                 result = libusb_claim_interface(usbdevicehandle, 0);
             }
+            
+            
+            for (int i = 0; (LIBUSB_SUCCESS == result) && (i < 2); i++)
+            {
+                result = libusb_bulk_transfer(usbdevicehandle, 0x86, buffer, BUFFER_SIZE, &transferred, 10);
+            }
         }
         else
         {
@@ -75,6 +85,11 @@ namespace Viper
         }
         
         return UsbResult2ViperResult(result);
+    }
+    
+    ViperResult_t Viperboard::Close(void)
+    {
+        return VIPER_OTHER_ERROR;
     }
     
     ViperResult_t UsbResult2ViperResult(int usbresult)

@@ -144,3 +144,23 @@ TEST(ViperboardTest, OpenFailsDeviceNotFound)
     delete pLibUsbMock;
 }
 
+TEST(ViperboardTest, CloseSuccess)
+{
+    libusb_context context;
+    libusb_device_handle handle;
+    Viperboard* pViper = nullptr;
+    ViperResult_t result = VIPER_TRANSACTION_FAILURE;
+    pLibUsbMock = new LibUsbMock();
+
+    EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
+    pViper = new Viperboard();
+    
+    
+    result = pViper->Close();
+    
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    
+    delete pLibUsbMock;
+}
+
+
