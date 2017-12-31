@@ -91,6 +91,7 @@ TEST(ViperboardTest, OpenKernelDriverNotActiveSuccess)
     EXPECT_CALL(*pLibUsbMock, kernel_driver_active(_, Eq(0))).WillOnce(Return(0));
     EXPECT_CALL(*pLibUsbMock, set_configuration(_, Eq(1))).WillOnce(Return(0));
     EXPECT_CALL(*pLibUsbMock, claim_interface(_,Eq(0))).WillOnce(Return(0));
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, 0x86, _, 512, _, 10)).Times(2).WillRepeatedly(Return(0));
     
     result = pViper->Open();
     
@@ -114,7 +115,8 @@ TEST(ViperboardTest, OpenKernelDriverActiveSuccess)
     EXPECT_CALL(*pLibUsbMock, kernel_driver_active(_, Eq(0))).WillOnce(Return(1));
     EXPECT_CALL(*pLibUsbMock, detach_kernel_driver(_, Eq(0))).WillOnce(Return(0));
     EXPECT_CALL(*pLibUsbMock, set_configuration(_, Eq(1))).WillOnce(Return(0));
-    EXPECT_CALL(*pLibUsbMock, claim_interface(_,Eq(0))).WillOnce(Return(0));
+    EXPECT_CALL(*pLibUsbMock, claim_interface(_, Eq(0))).WillOnce(Return(0));
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, 0x86, _, 512, _, 10)).Times(2).WillRepeatedly(Return(0));
     
     result = pViper->Open();
     
