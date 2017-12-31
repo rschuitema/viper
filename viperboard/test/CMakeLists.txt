@@ -5,7 +5,7 @@ add_dependencies(usb_mock googletest)
 target_include_directories(usb_mock PUBLIC ${GTEST_INCLUDE})
 target_link_libraries(usb_mock ${GTEST_LIBRARIES})
 
-add_executable(test_viperboard test_viperboard.cpp)
+add_executable(test_viperboard test_viperboard_openclose.cpp)
 target_link_libraries(test_viperboard viperboard usb_mock)
 add_test(Viperboard test_viperboard)
 
