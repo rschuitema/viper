@@ -16,10 +16,25 @@ using namespace Viper;
 #define VIPERBOARD_VENDOR_ID  (0x2058)
 #define VIPERBOARD_PRODUCT_ID (0x1005)
 
-TEST(ViperboardTest, ConstructionDesctuctionSuccess)
+class ViperboardTest : public ::testing::Test
+{
+    protected:
+        virtual void SetUp()
+        {
+            pLibUsbMock = new LibUsbMock();
+
+        }
+        
+        virtual void TearDown()
+        {
+            delete pLibUsbMock;
+        }
+};
+
+
+TEST_F(ViperboardTest, ConstructionDesctuctionSuccess)
 {
     libusb_context context;
-    pLibUsbMock = new LibUsbMock();
     
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     EXPECT_CALL(*pLibUsbMock, exit(_));
@@ -29,40 +44,34 @@ TEST(ViperboardTest, ConstructionDesctuctionSuccess)
     EXPECT_FALSE(nullptr == pViper);
 
     delete pViper;
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, ConstructionThrowExceptionNullPointer)
+TEST_F(ViperboardTest, ConstructionThrowExceptionNullPointer)
 {
     Viperboard* pViper = nullptr;
-    pLibUsbMock = new LibUsbMock();
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(Return(LIBUSB_SUCCESS));
 
     EXPECT_THROW(pViper = new Viperboard(), std::runtime_error);
     EXPECT_TRUE(nullptr == pViper);
 
     delete pViper;
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, ConstructionThrowExceptionFailed)
+TEST_F(ViperboardTest, ConstructionThrowExceptionFailed)
 {
     Viperboard* pViper = nullptr;
-    pLibUsbMock = new LibUsbMock();
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(Return(LIBUSB_ERROR_OTHER));
 
     EXPECT_THROW(pViper = new Viperboard(), std::runtime_error);
     EXPECT_TRUE(nullptr == pViper);
 
     delete pViper;
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, DestructionDoesNotThrowException)
+TEST_F(ViperboardTest, DestructionDoesNotThrowException)
 {
     libusb_context context;
     Viperboard* pViper = nullptr;
-    pLibUsbMock = new LibUsbMock();
 
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     EXPECT_CALL(*pLibUsbMock, exit(_)).WillOnce(Throw(std::runtime_error("Error")));
@@ -72,17 +81,15 @@ TEST(ViperboardTest, DestructionDoesNotThrowException)
 
     EXPECT_NO_THROW({delete pViper;});
 
-    delete pLibUsbMock;
 }
 
 
-TEST(ViperboardTest, OpenKernelDriverNotActiveSuccess)
+TEST_F(ViperboardTest, OpenKernelDriverNotActiveSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
     Viperboard* pViper = nullptr;
     ViperResult_t result = VIPER_TRANSACTION_FAILURE;
-    pLibUsbMock = new LibUsbMock();
 
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     pViper = new Viperboard();
@@ -97,16 +104,14 @@ TEST(ViperboardTest, OpenKernelDriverNotActiveSuccess)
     
     ASSERT_EQ(VIPER_SUCCESS, result);
     
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, OpenKernelDriverActiveSuccess)
+TEST_F(ViperboardTest, OpenKernelDriverActiveSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
     Viperboard* pViper = nullptr;
     ViperResult_t result = VIPER_TRANSACTION_FAILURE;
-    pLibUsbMock = new LibUsbMock();
 
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     pViper = new Viperboard();
@@ -122,16 +127,14 @@ TEST(ViperboardTest, OpenKernelDriverActiveSuccess)
     
     ASSERT_EQ(VIPER_SUCCESS, result);
     
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, OpenFailsDeviceNotFound)
+TEST_F(ViperboardTest, OpenFailsDeviceNotFound)
 {
     libusb_context context;
     libusb_device_handle handle;
     Viperboard* pViper = nullptr;
     ViperResult_t result = VIPER_TRANSACTION_FAILURE;
-    pLibUsbMock = new LibUsbMock();
 
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     pViper = new Viperboard();
@@ -141,16 +144,14 @@ TEST(ViperboardTest, OpenFailsDeviceNotFound)
     
     ASSERT_EQ(VIPER_HW_NOT_FOUND, result);
     
-    delete pLibUsbMock;
 }
 
-TEST(ViperboardTest, CloseSuccess)
+TEST_F(ViperboardTest, CloseSuccess)
 {
     libusb_context context;
     libusb_device_handle handle;
     Viperboard* pViper = nullptr;
     ViperResult_t result = VIPER_TRANSACTION_FAILURE;
-    pLibUsbMock = new LibUsbMock();
 
     EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
     pViper = new Viperboard();
@@ -170,7 +171,6 @@ TEST(ViperboardTest, CloseSuccess)
     
     ASSERT_EQ(VIPER_SUCCESS, result);
     
-    delete pLibUsbMock;
 }
 
 
