@@ -89,7 +89,11 @@ namespace Viper
     
     ViperResult_t Viperboard::Close(void)
     {
-        return VIPER_SUCCESS;
+        int result;
+        
+        result = libusb_release_interface(usbdevicehandle, 0);
+        
+        return UsbResult2ViperResult(result);
     }
     
     ViperResult_t UsbResult2ViperResult(int usbresult)
