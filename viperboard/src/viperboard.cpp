@@ -92,7 +92,12 @@ namespace Viper
         int result;
         
         result = libusb_release_interface(usbdevicehandle, 0);
-        
+    
+        if ((LIBUSB_SUCCESS == result) && (usbdevicehandle))
+        {
+            libusb_close(usbdevicehandle);
+        }
+            
         return UsbResult2ViperResult(result);
     }
     
