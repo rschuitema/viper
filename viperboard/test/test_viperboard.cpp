@@ -156,6 +156,7 @@ TEST(ViperboardTest, CloseSuccess)
     pViper = new Viperboard();
     
     EXPECT_CALL(*pLibUsbMock, release_interface(_, Eq(0))).WillOnce(Return(0));
+    EXPECT_CALL(*pLibUsbMock, close(_));
 
     result = pViper->Close();
     
