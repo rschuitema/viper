@@ -101,6 +101,12 @@ namespace Viper
         return UsbResult2ViperResult(result);
     }
     
+    ViperResult_t Viperboard::Revision(void)
+    {
+        return VIPER_OTHER_ERROR;
+    }
+   
+    
     ViperResult_t UsbResult2ViperResult(int usbresult)
     {
         ViperResult_t result = VIPER_OTHER_ERROR;
