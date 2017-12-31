@@ -63,6 +63,11 @@ namespace Viper
             {
                 result = libusb_set_configuration(usbdevicehandle, 1);
             }
+            
+            if (LIBUSB_SUCCESS == result)
+            {
+                result = libusb_claim_interface(usbdevicehandle, 0);
+            }
         }
         else
         {
