@@ -72,4 +72,53 @@ TEST_F(ViperboardGenaralTest, RevisionSuccess)
     ASSERT_EQ(0xABCD, revision);
 }
 
+TEST_F(ViperboardGenaralTest, RevisionMsbNotReturnCorrectNrBytes)
+{
+    uint16_t revision = 0;
+    uint8_t revision_lsb = 0xCD;
+    uint8_t revision_msb = 0xAB;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEA), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_msb), Return(3)));
+
+    EXPECT_THROW(revision = pViper->Revision(),std::runtime_error);
+    
+}
+
+TEST_F(ViperboardGenaralTest, RevisionMsbUsbError)
+{
+    uint16_t revision = 0;
+    uint8_t revision_lsb = 0xCD;
+    uint8_t revision_msb = 0xAB;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEA), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_msb), Return(LIBUSB_ERROR_OTHER)));
+
+    EXPECT_THROW(revision = pViper->Revision(),std::runtime_error);
+    
+}
+
+TEST_F(ViperboardGenaralTest, RevisionLsbNotReturnCorrectNrBytes)
+{
+    uint16_t revision = 0;
+    uint8_t revision_lsb = 0xCD;
+    uint8_t revision_msb = 0xAB;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEA), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_msb), Return(1)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEB), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_lsb), Return(9)));
+
+    EXPECT_THROW(revision = pViper->Revision(),std::runtime_error);
+    
+}
+
+TEST_F(ViperboardGenaralTest, RevisionLsbUsbError)
+{
+    uint16_t revision = 0;
+    uint8_t revision_lsb = 0xCD;
+    uint8_t revision_msb = 0xAB;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEA), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_msb), Return(1)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xEB), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SetArgPointee<5>(revision_lsb), Return(LIBUSB_ERROR_OTHER)));
+
+    EXPECT_THROW(revision = pViper->Revision(),std::runtime_error);
+    
+}
 
