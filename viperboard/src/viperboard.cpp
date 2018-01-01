@@ -101,9 +101,30 @@ namespace Viper
         return UsbResult2ViperResult(result);
     }
     
-    ViperResult_t Viperboard::Revision(void)
+    uint16_t Viperboard::Revision(void)
     {
-        return VIPER_OTHER_ERROR;
+        int bytes_transferred = 0;
+        uint8_t revision_msb = 0u;
+        uint8_t revision_lsb = 0u;
+        uint16_t revision = 0u;
+        
+        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xEA, 0x0000, 0x0000, &revision_msb, 0x01, 1000u);
+        if (bytes_transferred != 1)
+        {
+            throw std::runtime_error("did not get msb of revision number");
+        }
+        
+        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xEB, 0x0000, 0x0000, &revision_lsb, 0x01, 1000u);
+        if (bytes_transferred != 1)
+        {
+            throw std::runtime_error("did not get lsb of revision number");
+        }
+        
+        revision = revision_msb;
+        revision <<= 8;
+        revision |= revision_lsb;        
+        
+        return revision;
     }
    
     

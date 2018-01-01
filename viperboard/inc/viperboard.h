@@ -27,7 +27,7 @@ namespace Viper
         void SetI2CMaster(II2C_Master* master);
         void SetI2CSlave(II2C_Slave* slave);
         
-        ViperResult_t Revision(void);
+        uint16_t Revision(void);
 
     private:
         ViperResult_t DetachActiveKernelDriver(libusb_device_handle* devicehandle);
