@@ -132,7 +132,7 @@ namespace Viper
     {
         if (nullptr == i2c_master)
         {
-            i2c_master = new I2CMasterViperboard();
+            i2c_master = new I2CMasterViperboard(usbdevicehandle);
         }
         
         return i2c_master;
