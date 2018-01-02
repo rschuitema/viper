@@ -11,6 +11,7 @@ using ::testing::SetArgPointee;
 using ::testing::Throw;
 using ::testing::Eq;
 using ::testing::A;
+using ::testing::SaveArgPointee;
 
 using namespace Viper;
 
@@ -82,7 +83,10 @@ TEST_F(ViperboardI2CMasterTest, SetFrequencySuccess)
     ViperResult_t result = VIPER_OTHER_ERROR;
     I2CFrequency_t frequency = I2C_FREQUENCY_400KHZ;
     II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    uint8_t bus_frequency = 4u;
 
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE1), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SaveArgPointee<5>(&bus_frequency), Return(0)));
+    
     result = pI2CMaster->SetFrequency(frequency);
     
     ASSERT_EQ(VIPER_SUCCESS, result);
