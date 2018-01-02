@@ -79,3 +79,4 @@ enable_testing()
 
 
 add_subdirectory(viperboard)
+add_subdirectory(example)
