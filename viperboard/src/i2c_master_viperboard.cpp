@@ -15,7 +15,7 @@ namespace Viper
 
     ViperResult_t I2CMasterViperboard::SetFrequency(I2CFrequency_t frequency)
     {
-        return VIPER_OTHER_ERROR;
+        return VIPER_SUCCESS;
     }
 
     ViperResult_t I2CMasterViperboard::ScanConnectedDevices(uint8_t* plist, int16_t length)

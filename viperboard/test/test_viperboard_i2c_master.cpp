@@ -59,6 +59,24 @@ class ViperboardI2CMasterTest : public ::testing::Test
 // The testcases can asume the viperboard is opened and closed successfully in the setup and teardown
 // This will put more focus on the intention of the actual testcases
 
+TEST_F(ViperboardI2CMasterTest, GetI2CMasterInterfaceSuccess)
+{
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    ASSERT_FALSE(nullptr == pI2CMaster);
+   
+}
+
+TEST_F(ViperboardI2CMasterTest, GetI2CMasterInterfaceTwiceReturnsSameInterface)
+{
+    II2C_Master* pI2CMaster1 = pViper->GetI2CMasterInterface();
+    II2C_Master* pI2CMaster2 = pViper->GetI2CMasterInterface();
+    
+    ASSERT_FALSE(nullptr == pI2CMaster1);
+    ASSERT_FALSE(nullptr == pI2CMaster2);
+    ASSERT_TRUE(pI2CMaster2 == pI2CMaster1);
+   
+}
+
 TEST_F(ViperboardI2CMasterTest, SetFrequencySuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
