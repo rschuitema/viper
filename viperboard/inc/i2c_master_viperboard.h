@@ -1,19 +1,20 @@
-
+#include <stdint.h>
 #include "vipertypes.h"
 #include "ii2c_master.h"
 
-namespace Viperboard
+namespace Viper
 {
     
     class I2CMasterViperboard : public II2C_Master
     {
-        I2CMasterViperboard(void);
-        ~I2CMasterViperboard(void);
+        public:
+            I2CMasterViperboard(void);
+            virtual ~I2CMasterViperboard(void);
 
-        ViperResult_t SetFrequency(int frequency);
-        ViperResult_t ScanConnectedDevices(unsigned char* plist, int length);
-        ViperResult_t Write(unsigned char slave_address, unsigned char register_address, int length, unsigned char* pBuffer);
-        ViperResult_t Read(unsigned char slave_address, unsigned char register_address, int length, unsigned char* pBuffer);
+            ViperResult_t SetFrequency(I2CFrequency_t frequency);
+            ViperResult_t ScanConnectedDevices(uint8_t* plist, int16_t length);
+            ViperResult_t Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer);
+            ViperResult_t Read(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer);
     };
     
 }

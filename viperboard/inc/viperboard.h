@@ -24,13 +24,10 @@ namespace Viper
         ViperResult_t Open(void);
         ViperResult_t Close(void);
         
-        void SetI2CMaster(II2C_Master* master);
-        void SetI2CSlave(II2C_Slave* slave);
+        II2C_Master* GetI2CMasterInterface(void);
+        II2C_Slave*  GetI2CSlaveInterface(void);
         
         uint16_t Revision(void);
-
-    private:
-        ViperResult_t DetachActiveKernelDriver(libusb_device_handle* devicehandle);
 
     private:
         libusb_context* usbcontext = nullptr;

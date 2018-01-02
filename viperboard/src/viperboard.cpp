@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include "vipertypes.h"
 #include "viperboard.h"
+#include "i2c_master_viperboard.h"
 
 namespace Viper
 {
@@ -125,6 +126,16 @@ namespace Viper
         revision |= revision_lsb;        
         
         return revision;
+    }
+
+    II2C_Master* Viperboard::GetI2CMasterInterface(void)
+    {
+        if (nullptr == i2c_master)
+        {
+            i2c_master = new I2CMasterViperboard();
+        }
+        
+        return i2c_master;
     }
    
     
