@@ -3,7 +3,7 @@
 #include "gmock/gmock.h"
 #include "libusb_mock.hpp"
 #include "viperboard.h"
-#include "ii2c_master.h"
+#include "igpio_portb.h"
 
 using ::testing::_;
 using ::testing::Return;
@@ -18,7 +18,7 @@ using namespace Viper;
 #define VIPERBOARD_VENDOR_ID  (0x2058)
 #define VIPERBOARD_PRODUCT_ID (0x1005)
 
-class ViperboardI2CMasterTest : public ::testing::Test
+class ViperboardGpioBTest : public ::testing::Test
 {
     protected:
         libusb_context context;
@@ -60,51 +60,33 @@ class ViperboardI2CMasterTest : public ::testing::Test
 // The testcases can asume the viperboard is opened and closed successfully in the setup and teardown
 // This will put more focus on the intention of the actual testcases
 
-TEST_F(ViperboardI2CMasterTest, GetI2CMasterInterfaceSuccess)
+TEST_F(ViperboardGpioBTest, GetGpioInterfaceSuccess)
 {
-    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
-    ASSERT_FALSE(nullptr == pI2CMaster);
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    ASSERT_FALSE(nullptr == pGpio);
    
 }
 
-TEST_F(ViperboardI2CMasterTest, GetI2CMasterInterfaceTwiceReturnsSameInterface)
+TEST_F(ViperboardGpioBTest, GetGpioInterfaceTwiceReturnsSameInterface)
 {
-    II2C_Master* pI2CMaster1 = pViper->GetI2CMasterInterface();
-    II2C_Master* pI2CMaster2 = pViper->GetI2CMasterInterface();
+    IGPIO_PortB* pGpio1 = pViper->GetGpioPortBInterface();
+    IGPIO_PortB* pGpio2 = pViper->GetGpioPortBInterface();
     
-    ASSERT_FALSE(nullptr == pI2CMaster1);
-    ASSERT_FALSE(nullptr == pI2CMaster2);
-    ASSERT_TRUE(pI2CMaster2 == pI2CMaster1);
+    ASSERT_FALSE(nullptr == pGpio1);
+    ASSERT_FALSE(nullptr == pGpio2);
+    ASSERT_TRUE(pGpio2 == pGpio1);
    
 }
 
-TEST_F(ViperboardI2CMasterTest, SetFrequency400KHZSuccess)
+TEST_F(ViperboardGpioBTest, SetPortAllBitsInputSuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
-    I2CFrequency_t frequency = I2C_FREQUENCY_400KHZ;
-    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
-    uint8_t bus_frequency = 0u;
-
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE1), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SaveArgPointee<5>(&bus_frequency), Return(1)));
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     
-    result = pI2CMaster->SetFrequency(frequency);
+    result = pGpio->SetPortDirection(0x0000, 0xFFFF);
     
     ASSERT_EQ(VIPER_SUCCESS, result);
-    ASSERT_EQ(4u, bus_frequency);
 }
 
-TEST_F(ViperboardI2CMasterTest, SetFrequency6MHZSuccess)
-{
-    ViperResult_t result = VIPER_OTHER_ERROR;
-    I2CFrequency_t frequency = I2C_FREQUENCY_6MHZ;
-    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
-    uint8_t bus_frequency = 0u;
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE1), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SaveArgPointee<5>(&bus_frequency), Return(1)));
-    
-    result = pI2CMaster->SetFrequency(frequency);
-    
-    ASSERT_EQ(VIPER_SUCCESS, result);
-    ASSERT_EQ(1u, bus_frequency);
-}
 

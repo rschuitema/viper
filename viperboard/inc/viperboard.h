@@ -12,6 +12,7 @@ namespace Viper
 {
     class II2C_Master;
     class II2C_Slave;
+    class IGPIO_PortB;
 
     class Viperboard {
         
@@ -26,6 +27,8 @@ namespace Viper
         
         II2C_Master* GetI2CMasterInterface(void);
         II2C_Slave*  GetI2CSlaveInterface(void);
+
+	IGPIO_PortB* GetGpioPortBInterface(void);
         
         uint16_t Revision(void);
 
@@ -36,6 +39,7 @@ namespace Viper
 
         II2C_Master* i2c_master = nullptr;
         II2C_Slave*  i2c_slave = nullptr;
+        IGPIO_PortB* gpio_portb = nullptr;
         
     };
 }

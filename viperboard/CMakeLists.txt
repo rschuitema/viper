@@ -17,6 +17,7 @@ set(
     VIPERBOARD_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/viperboard.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/i2c_master_viperboard.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gpio_portb_viperboard.cpp
 )
 
 add_library(viperboard ${VIPERBOARD_SOURCE_FILES})
