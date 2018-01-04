@@ -150,3 +150,23 @@ TEST_F(ViperboardGpioBTest, SetPortOnlyAllowedBitsInputSuccess)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardGpioBTest, WritePortSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[50] = {0xAA};
+    int16_t length = 5;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce( DoAll( WithArg<5>(SaveArrayPointee(data, length)), Return(5) ) );
+    
+    result = pGpio->WritePort(0x0000, 0xF05A);
+    
+    ASSERT_EQ(0x01, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0xF0, data[3]);
+    ASSERT_EQ(0x5A, data[4]);
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+
