@@ -90,7 +90,7 @@ ACTION_P2(SaveArrayPointee, pointer, length)
 }
 
 
-TEST_F(ViperboardGpioBTest, SetPortAllBitsInputSuccess)
+TEST_F(ViperboardGpioBTest, SetPortBitsToInputNotReturnCorrectNrBytes)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
@@ -98,7 +98,7 @@ TEST_F(ViperboardGpioBTest, SetPortAllBitsInputSuccess)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce( DoAll( WithArg<5>(SaveArrayPointee(data, length)), Return(5) ) );
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce( DoAll( WithArg<5>(SaveArrayPointee(data, length)), Return(7) ) );
     
     result = pGpio->SetPortDirection(0x0000, 0xFFFF);
     
@@ -107,7 +107,7 @@ TEST_F(ViperboardGpioBTest, SetPortAllBitsInputSuccess)
     ASSERT_EQ(0x00, data[2]);
     ASSERT_EQ(0xFF, data[3]);
     ASSERT_EQ(0xFF, data[4]);
-    ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
 
 TEST_F(ViperboardGpioBTest, SetPortSomeBitsInputSuccess)
