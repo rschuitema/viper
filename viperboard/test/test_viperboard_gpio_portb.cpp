@@ -14,6 +14,7 @@ using ::testing::A;
 using ::testing::SaveArgPointee;
 using ::testing::WithArg;
 using ::testing::DoAll;
+using ::testing::SetArrayArgument;
 
 using namespace Viper;
 
@@ -188,5 +189,27 @@ TEST_F(ViperboardGpioBTest, WritePortTransactionFailure)
     ASSERT_EQ(0xF0, data[3]);
     ASSERT_EQ(0x5A, data[4]);
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+}
+
+TEST_F(ViperboardGpioBTest, ReadPortSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[3] = {0xFF, 0x55, 0xAA};
+    int16_t length = 5;
+    uint16_t port_value = 0u;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(&data[0], &data[2]), Return(5)));
+    
+    result = pGpio->ReadPort(&port_value);
+    
+    ASSERT_EQ(0x01, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0xF0, data[3]);
+    ASSERT_EQ(0x5A, data[4]);
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_EQ(0xABCD, port_value);
 }
 
