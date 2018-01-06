@@ -91,7 +91,7 @@ ACTION_P2(SaveArrayPointee, pointer, length)
 }
 
 
-TEST_F(ViperboardGpioBTest, SetPortBitsToInputNotReturnCorrectNrBytes)
+TEST_F(ViperboardGpioBTest, SetPortDirectionIncorrectNrBytesTransactionFailure)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
@@ -111,7 +111,7 @@ TEST_F(ViperboardGpioBTest, SetPortBitsToInputNotReturnCorrectNrBytes)
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
 
-TEST_F(ViperboardGpioBTest, SetPortSomeBitsInputSuccess)
+TEST_F(ViperboardGpioBTest, SetPortDirectionSomeBitsToInputSuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
@@ -131,7 +131,7 @@ TEST_F(ViperboardGpioBTest, SetPortSomeBitsInputSuccess)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
-TEST_F(ViperboardGpioBTest, SetPortOnlyAllowedBitsInputSuccess)
+TEST_F(ViperboardGpioBTest, SetPortDirectionOnlyAllowedBitsToInputSuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
@@ -150,6 +150,23 @@ TEST_F(ViperboardGpioBTest, SetPortOnlyAllowedBitsInputSuccess)
     ASSERT_EQ(0x5A, data[4]);
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
+
+TEST_F(ViperboardGpioBTest, GetPortDirectionSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
+    uint16_t port_direction = 0u;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+    
+    result = pGpio->GetPortDirection(&port_direction);
+    
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_EQ(0xDEAD, port_direction);
+}
+
+
 
 TEST_F(ViperboardGpioBTest, WritePortSuccess)
 {
