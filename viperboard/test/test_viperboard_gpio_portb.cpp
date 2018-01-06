@@ -111,6 +111,26 @@ TEST_F(ViperboardGpioBTest, SetPortDirectionIncorrectNrBytesTransactionFailure)
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
 
+TEST_F(ViperboardGpioBTest, SetPortDirectionLibusbErrorTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[50] = {0xAA};
+    int16_t length = 5;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
+    
+    result = pGpio->SetPortDirection(0x0000, 0xFFFF);
+    
+    ASSERT_EQ(0x00, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0xFF, data[3]);
+    ASSERT_EQ(0xFF, data[4]);
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+}
+
 TEST_F(ViperboardGpioBTest, SetPortDirectionSomeBitsToInputSuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
@@ -181,6 +201,20 @@ TEST_F(ViperboardGpioBTest, GetPortDirectionIncorrectNrBytesTransactionFailure)
     ASSERT_EQ(0x0u, port_direction);
 }
 
+TEST_F(ViperboardGpioBTest, GetPortDirectionLibusbErrorTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
+    uint16_t port_direction = 0u;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(LIBUSB_ERROR_NO_DEVICE)));
+    
+    result = pGpio->GetPortDirection(&port_direction);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_EQ(0x0u, port_direction);
+}
 
 TEST_F(ViperboardGpioBTest, WritePortSuccess)
 {
@@ -202,7 +236,7 @@ TEST_F(ViperboardGpioBTest, WritePortSuccess)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
-TEST_F(ViperboardGpioBTest, WritePortTransactionFailure)
+TEST_F(ViperboardGpioBTest, WritePortIncorrectNrBytesTransactionFailure)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
@@ -211,6 +245,26 @@ TEST_F(ViperboardGpioBTest, WritePortTransactionFailure)
 
     
     EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(9)));
+    
+    result = pGpio->WritePort(0x0000, 0xF05A);
+    
+    ASSERT_EQ(0x01, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0xF0, data[3]);
+    ASSERT_EQ(0x5A, data[4]);
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+}
+
+TEST_F(ViperboardGpioBTest, WritePortLibusbErrorTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[50] = {0xAA};
+    int16_t length = 5;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->WritePort(0x0000, 0xF05A);
     
@@ -249,6 +303,23 @@ TEST_F(ViperboardGpioBTest, ReadPortIncorrectNrBytesTransactionFailure)
 
     
     EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(3)));
+    
+    result = pGpio->ReadPort(&port_value);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_EQ(0u, port_value);
+}
+
+TEST_F(ViperboardGpioBTest, ReadPortLibusbErrorTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[3] = {0xFF, 0xAB, 0xCD};
+    int16_t length = 5;
+    uint16_t port_value = 0u;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->ReadPort(&port_value);
     
