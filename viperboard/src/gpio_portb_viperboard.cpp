@@ -36,7 +36,15 @@ namespace Viper
     
     ViperResult_t GpioPortBViperboard::GetPortDirection(uint16_t* value)
     {
-        return VIPER_OTHER_ERROR;
+        int bytes_transferred = 0;
+	    uint8_t buffer[5];
+	    
+        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
+        *value = buffer[3];
+        *value <<= 8u;
+        *value |= buffer[4];
+        
+        return VIPER_SUCCESS;
     }
     
     ViperResult_t GpioPortBViperboard::WritePort(uint16_t value, uint16_t mask)
