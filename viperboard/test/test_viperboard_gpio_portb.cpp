@@ -208,3 +208,20 @@ TEST_F(ViperboardGpioBTest, ReadPortSuccess)
     ASSERT_EQ(0xABCD, port_value);
 }
 
+TEST_F(ViperboardGpioBTest, ReadPortIncorrectNrBytesTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[3] = {0xFF, 0xAB, 0xCD};
+    int16_t length = 5;
+    uint16_t port_value = 0u;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(3)));
+    
+    result = pGpio->ReadPort(&port_value);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_EQ(0u, port_value);
+}
+
