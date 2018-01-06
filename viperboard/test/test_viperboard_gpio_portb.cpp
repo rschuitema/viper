@@ -327,3 +327,25 @@ TEST_F(ViperboardGpioBTest, ReadPortLibusbErrorTransactionFailure)
     ASSERT_EQ(0u, port_value);
 }
 
+TEST_F(ViperboardGpioBTest, SetBitDirectionToInputSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[50] = {0xAA};
+    int16_t length = 7;
+
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    
+    result = pGpio->SetBitDirection(7, false);
+    
+    ASSERT_EQ(0x02, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0x00, data[3]);
+    ASSERT_EQ(0x00, data[4]);
+    ASSERT_EQ(0x07, data[5]);
+    ASSERT_EQ(0x00, data[6]);
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+

@@ -37,7 +37,7 @@ namespace Viper
     {
         try
         {
-            if (nullptr != usbcontext)
+            if (usbcontext)
             {
                 libusb_exit(usbcontext);
             }
