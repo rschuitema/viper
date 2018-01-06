@@ -166,6 +166,20 @@ TEST_F(ViperboardGpioBTest, GetPortDirectionSuccess)
     ASSERT_EQ(0xDEAD, port_direction);
 }
 
+TEST_F(ViperboardGpioBTest, GetPortDirectionIncorrectNrBytesTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
+    uint16_t port_direction = 0u;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(88)));
+    
+    result = pGpio->GetPortDirection(&port_direction);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_EQ(0x0u, port_direction);
+}
 
 
 TEST_F(ViperboardGpioBTest, WritePortSuccess)

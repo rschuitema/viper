@@ -26,6 +26,7 @@ namespace Viper
 	    buffer[4] = ((mask & 0x00FF));
 	    
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
+	    
 	    if (bytes_transferred !=5) 
 	    {
 	        return VIPER_TRANSACTION_FAILURE;
@@ -40,11 +41,17 @@ namespace Viper
 	    uint8_t buffer[5];
 	    
         bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
-        *value = buffer[3];
-        *value <<= 8u;
-        *value |= buffer[4];
         
-        return VIPER_SUCCESS;
+	    if (bytes_transferred == 5) 
+	    {
+            *value = buffer[3];
+            *value <<= 8u;
+            *value |= buffer[4];
+	        
+	        return VIPER_SUCCESS;
+	    } 
+	    
+        return VIPER_TRANSACTION_FAILURE;
     }
     
     ViperResult_t GpioPortBViperboard::WritePort(uint16_t value, uint16_t mask)
@@ -59,6 +66,7 @@ namespace Viper
 	    buffer[4] = ((mask & 0x00FF));
 	    
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
+	    
 	    if (bytes_transferred !=5) 
 	    {
 	        return VIPER_TRANSACTION_FAILURE;
