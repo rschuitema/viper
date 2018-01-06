@@ -97,7 +97,19 @@ namespace Viper
 
     ViperResult_t GpioPortBViperboard::SetBitDirection(uint8_t bit, bool direction)
     {
-        return VIPER_OTHER_ERROR;
+        int bytes_transferred = 0;
+	    uint8_t buffer[7];
+	    
+	    buffer[0] = 0x02;
+	    buffer[1] = 0x00;
+	    buffer[2] = 0x00;
+	    buffer[3] = 0x00;
+	    buffer[4] = 0x00;
+	    buffer[5] = bit;
+	    buffer[6] = direction ? 0x01 : 0x00;
+	    
+	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xDD, 0x0000, 0x0000, buffer, 7, 1000);
+        return VIPER_SUCCESS;
     }
     
     ViperResult_t GpioPortBViperboard::GetBitDirection(uint8_t bit, bool* direction)

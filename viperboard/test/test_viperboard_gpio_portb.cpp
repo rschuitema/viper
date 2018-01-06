@@ -335,7 +335,7 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionToInputSuccess)
     int16_t length = 7;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
     
     result = pGpio->SetBitDirection(7, false);
     
