@@ -167,6 +167,11 @@ namespace Viper
 	    
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xDD, 0x0000, 0x0000, buffer, 7, 1000);
 	    
+	    if (bytes_transferred != 7)
+	    {
+	        return VIPER_TRANSACTION_FAILURE;
+	    }
+	    
 	    return VIPER_SUCCESS;
       }
     
