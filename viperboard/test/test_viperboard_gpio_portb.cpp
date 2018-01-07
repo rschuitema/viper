@@ -424,7 +424,7 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionInputSuccess)
     
     EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
     
-    result = pGpio->GetBitDirection(5, &bit_direction);
+    result = pGpio->GetBitDirection(4, &bit_direction);
     
     ASSERT_EQ(VIPER_SUCCESS, result);
     ASSERT_FALSE(bit_direction);

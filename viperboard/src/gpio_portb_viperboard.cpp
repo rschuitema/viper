@@ -120,6 +120,20 @@ namespace Viper
     
     ViperResult_t GpioPortBViperboard::GetBitDirection(uint8_t bit, bool* direction)
     {
+        int bytes_transferred = 0;
+	    uint8_t buffer[5];
+	    uint16_t value = 0u;
+	    uint16_t mask = 1u;
+	    
+        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
+        
+        value = buffer[3];
+        value <<= 8u;
+        value |= buffer[4];
+        
+        mask <<= bit;
+        *direction = value & mask ? true: false;
+        
         return VIPER_SUCCESS;
     }
     
