@@ -28,8 +28,8 @@ namespace Viper
             
             virtual ViperResult_t SetBitDirection(uint8_t bit, bool direction);
             virtual ViperResult_t GetBitDirection(uint8_t bit, bool* direction);
-            virtual ViperResult_t WriteBit(uint8_t bit, bool direction);
-            virtual ViperResult_t ReadBit(uint8_t bit, bool* direction);
+            virtual ViperResult_t WriteBit(uint8_t bit, bool value);
+            virtual ViperResult_t ReadBit(uint8_t bit, bool* value);
 
        private:
             libusb_device_handle* usbdevicehandle = nullptr;
