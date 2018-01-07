@@ -125,7 +125,7 @@ namespace Viper
 	    uint16_t value = 0u;
 	    uint16_t mask = 1u;
 	    
-	    if (bit > 15u)
+	    if ((bit > 15u) || (!direction))
 	    {
 	        return VIPER_INVALID_PARAMETER;
 	    }
