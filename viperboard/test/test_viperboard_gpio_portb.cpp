@@ -467,8 +467,6 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionIncorrectBitInvalidParameter)
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
     bool bit_direction = true;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
-    
     result = pGpio->GetBitDirection(66, &bit_direction);
     
     ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
