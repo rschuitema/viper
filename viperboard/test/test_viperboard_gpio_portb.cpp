@@ -581,3 +581,14 @@ TEST_F(ViperboardGpioBTest, WriteBitUsbErrorTransactionFailure)
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
 
+TEST_F(ViperboardGpioBTest, WriteBitIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    
+    result = pGpio->WriteBit(16, false);
+    
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
+
+
