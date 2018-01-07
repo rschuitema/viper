@@ -120,7 +120,7 @@ namespace Viper
     
     ViperResult_t GpioPortBViperboard::GetBitDirection(uint8_t bit, bool* direction)
     {
-        return VIPER_OTHER_ERROR;
+        return VIPER_SUCCESS;
     }
     
     ViperResult_t GpioPortBViperboard::WriteBit(uint8_t bit, bool direction)
