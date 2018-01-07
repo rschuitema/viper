@@ -474,5 +474,17 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionIncorrectBitInvalidParameter)
 }
 
 
+TEST_F(ViperboardGpioBTest, GetBitDirectionNullptrInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
+    bool bit_direction = true;
+    
+    result = pGpio->GetBitDirection(4, nullptr);
+    
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+    ASSERT_TRUE(bit_direction);
+}
 
 
