@@ -371,6 +371,16 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionToOutputSuccess)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardGpioBTest, SetBitDirectionIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+
+    result = pGpio->SetBitDirection(16, true);
+    
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
+
 TEST_F(ViperboardGpioBTest, SetBitDirectionIncorrectNrBytesTransactionFailure)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
