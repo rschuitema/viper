@@ -445,3 +445,19 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionLibusbErrorTransactionFailure)
     ASSERT_TRUE(bit_direction);
 }
 
+TEST_F(ViperboardGpioBTest, GetBitDirectionIncorrectNrBytesTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
+    bool bit_direction = true;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(67)));
+    
+    result = pGpio->GetBitDirection(4, &bit_direction);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_TRUE(bit_direction);
+}
+
+
