@@ -591,4 +591,20 @@ TEST_F(ViperboardGpioBTest, WriteBitIncorrectBitInvalidParameter)
     ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
 }
 
+TEST_F(ViperboardGpioBTest, ReadBitLowSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    bool bit_value = true;
+    uint8_t data[5] = {0xFF, 0xFF, 0xFD, 0xFF, 0xFF};
+    bool bit_direction = true;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+
+    result = pGpio->ReadBit(2, &bit_value);
+    
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_FALSE(bit_value);
+}
+
 
