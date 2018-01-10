@@ -146,6 +146,29 @@ TEST_F(ViperboardOpenCloseTest, OpenFailsDeviceNotFound)
     
 }
 
+
+TEST_F(ViperboardOpenCloseTest, OpenFailsNotSupported)
+{
+    libusb_context context;
+    libusb_device_handle handle;
+    Viperboard* pViper = nullptr;
+    ViperResult_t result = VIPER_TRANSACTION_FAILURE;
+
+    EXPECT_CALL(*pLibUsbMock, init(_)).WillOnce(DoAll(SetArgPointee<0>(&context), Return(LIBUSB_SUCCESS)));
+    pViper = new Viperboard();
+
+    EXPECT_CALL(*pLibUsbMock, open_device_with_vid_pid(_, _, _)).WillOnce(Return(&handle));
+    EXPECT_CALL(*pLibUsbMock, kernel_driver_active(_, Eq(0))).WillOnce(Return(1));
+    EXPECT_CALL(*pLibUsbMock, detach_kernel_driver(_, Eq(0))).WillOnce(Return(0));
+    EXPECT_CALL(*pLibUsbMock, set_configuration(_, Eq(1))).WillOnce(Return(LIBUSB_ERROR_NOT_SUPPORTED));
+
+    result = pViper->Open();
+
+    ASSERT_EQ(VIPER_OTHER_ERROR, result);
+    
+}
+
+
 TEST_F(ViperboardOpenCloseTest, CloseSuccess)
 {
     libusb_context context;
