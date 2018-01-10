@@ -623,3 +623,19 @@ TEST_F(ViperboardGpioBTest, ReadBitHighSuccess)
     ASSERT_TRUE(bit_value);
 }
 
+TEST_F(ViperboardGpioBTest, ReadBitIncorrectNrBytesTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
+    bool bit_value = true;
+    uint8_t data[5] = {0x00, 0x10, 0x00, 0x00, 0x00};
+    bool bit_direction = true;
+    
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(25)));
+
+    result = pGpio->ReadBit(12, &bit_value);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_TRUE(bit_value);
+}
+
