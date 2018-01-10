@@ -181,7 +181,7 @@ namespace Viper
 	    return VIPER_SUCCESS;
       }
     
-    ViperResult_t GpioPortBViperboard::ReadBit(uint8_t bit, bool* direction)
+    ViperResult_t GpioPortBViperboard::ReadBit(uint8_t bit, bool* bit_value)
     {
         int bytes_transferred = 0;
 	    uint8_t buffer[5];
@@ -190,14 +190,19 @@ namespace Viper
         
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
 	    
-        value = buffer[1];
-        value <<= 8u;
-        value |= buffer[2];
+	    if (bytes_transferred == 5)
+	    {
+            value = buffer[1];
+            value <<= 8u;
+            value |= buffer[2];
+            
+            mask <<= bit;
+            *bit_value = value & mask ? true: false;
+	        
+            return VIPER_SUCCESS;
+        }
         
-        mask <<= bit;
-        *direction = value & mask ? true: false;
-	    
-        return VIPER_SUCCESS;
+        return VIPER_TRANSACTION_FAILURE;
     }
     
 
