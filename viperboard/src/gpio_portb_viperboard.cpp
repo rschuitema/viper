@@ -188,6 +188,11 @@ namespace Viper
 	    uint16_t value = 0u;
 	    uint16_t mask = 1u;
         
+	    if (bit > 15)
+	    {
+	        return VIPER_INVALID_PARAMETER;
+	    }
+
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xDD, 0x0000, 0x0000, buffer, 5, 1000);
 	    
 	    if (bytes_transferred == 5)

@@ -658,7 +658,7 @@ TEST_F(ViperboardGpioBTest, ReadBitIncorrectBitInvalidParameter)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     bool bit_value = true;
     
-    result = pGpio->ReadBit(12, &bit_value);
+    result = pGpio->ReadBit(16, &bit_value);
     
     ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
 }
