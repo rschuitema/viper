@@ -99,7 +99,7 @@ TEST_F(ViperboardGpioBTest, SetPortDirectionIncorrectNrBytesTransactionFailure)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
     
     result = pGpio->SetPortDirection(0x0000, 0xFFFF);
     
@@ -119,7 +119,7 @@ TEST_F(ViperboardGpioBTest, SetPortDirectionLibusbErrorTransactionFailure)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->SetPortDirection(0x0000, 0xFFFF);
     
@@ -139,7 +139,7 @@ TEST_F(ViperboardGpioBTest, SetPortDirectionSomeBitsToInputSuccess)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->SetPortDirection(0x34AE, 0xFFFF);
     
@@ -159,7 +159,7 @@ TEST_F(ViperboardGpioBTest, SetPortDirectionOnlyAllowedBitsToInputSuccess)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->SetPortDirection(0x0000, 0xF05A);
     
@@ -177,8 +177,9 @@ TEST_F(ViperboardGpioBTest, GetPortDirectionSuccess)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
     uint16_t port_direction = 0u;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(length)));
     
     result = pGpio->GetPortDirection(&port_direction);
     
@@ -192,8 +193,9 @@ TEST_F(ViperboardGpioBTest, GetPortDirectionIncorrectNrBytesTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
     uint16_t port_direction = 0u;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(88)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(88)));
     
     result = pGpio->GetPortDirection(&port_direction);
     
@@ -207,8 +209,9 @@ TEST_F(ViperboardGpioBTest, GetPortDirectionLibusbErrorTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xDE, 0xAD};
     uint16_t port_direction = 0u;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->GetPortDirection(&port_direction);
     
@@ -224,7 +227,7 @@ TEST_F(ViperboardGpioBTest, WritePortSuccess)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(5)));
     
     result = pGpio->WritePort(0x0000, 0xF05A);
     
@@ -244,7 +247,7 @@ TEST_F(ViperboardGpioBTest, WritePortIncorrectNrBytesTransactionFailure)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(9)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(9)));
     
     result = pGpio->WritePort(0x0000, 0xF05A);
     
@@ -264,7 +267,7 @@ TEST_F(ViperboardGpioBTest, WritePortLibusbErrorTransactionFailure)
     int16_t length = 5;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->WritePort(0x0000, 0xF05A);
     
@@ -285,7 +288,7 @@ TEST_F(ViperboardGpioBTest, ReadPortSuccess)
     uint16_t port_value = 0u;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(length)));
     
     result = pGpio->ReadPort(&port_value);
     
@@ -302,7 +305,7 @@ TEST_F(ViperboardGpioBTest, ReadPortIncorrectNrBytesTransactionFailure)
     uint16_t port_value = 0u;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(3)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(3)));
     
     result = pGpio->ReadPort(&port_value);
     
@@ -319,7 +322,7 @@ TEST_F(ViperboardGpioBTest, ReadPortLibusbErrorTransactionFailure)
     uint16_t port_value = 0u;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+3), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->ReadPort(&port_value);
     
@@ -335,7 +338,7 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionToInputSuccess)
     int16_t length = 7;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->SetBitDirection(7, false);
     
@@ -357,7 +360,7 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionToOutputSuccess)
     int16_t length = 7;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->SetBitDirection(7, true);
     
@@ -389,7 +392,7 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionIncorrectNrBytesTransactionFailure)
     int16_t length = 7;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(8)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(8)));
     
     result = pGpio->SetBitDirection(7, true);
     
@@ -411,7 +414,7 @@ TEST_F(ViperboardGpioBTest, SetBitDirectionLibusbErrorTransactionFailure)
     int16_t length = 7;
 
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->SetBitDirection(7, true);
     
@@ -431,8 +434,9 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionInputSuccess)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
     bool bit_direction = true;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(length)));
     
     result = pGpio->GetBitDirection(4, &bit_direction);
     
@@ -446,8 +450,9 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionLibusbErrorTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
     bool bit_direction = true;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->GetBitDirection(4, &bit_direction);
     
@@ -461,8 +466,9 @@ TEST_F(ViperboardGpioBTest, GetBitDirectionIncorrectNrBytesTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     uint8_t data[5] = {0xFF, 0xFF, 0xFF, 0xFF, 0xEF};
     bool bit_direction = true;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(67)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(67)));
     
     result = pGpio->GetBitDirection(4, &bit_direction);
     
@@ -504,7 +510,7 @@ TEST_F(ViperboardGpioBTest, WriteBitHighSuccess)
     uint8_t data[50] = {0xAA};
     int16_t length = 7;
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->WriteBit(9, true);
     
@@ -525,7 +531,7 @@ TEST_F(ViperboardGpioBTest, WriteBitLowSuccess)
     uint8_t data[50] = {0xAA};
     int16_t length = 7;
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(7)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
     
     result = pGpio->WriteBit(1, false);
     
@@ -546,7 +552,7 @@ TEST_F(ViperboardGpioBTest, WriteBitIncorrectNrBytesTransactionFailure)
     uint8_t data[50] = {0xAA};
     int16_t length = 7;
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(3)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(3)));
     
     result = pGpio->WriteBit(1, false);
     
@@ -567,7 +573,7 @@ TEST_F(ViperboardGpioBTest, WriteBitUsbErrorTransactionFailure)
     uint8_t data[50] = {0xAA};
     int16_t length = 7;
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(7u), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(LIBUSB_ERROR_NO_DEVICE)));
     
     result = pGpio->WriteBit(1, false);
     
@@ -598,8 +604,9 @@ TEST_F(ViperboardGpioBTest, ReadBitLowSuccess)
     bool bit_value = true;
     uint8_t data[5] = {0xFF, 0xFF, 0xFD, 0xFF, 0xFF};
     bool bit_direction = true;
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(length)));
 
     result = pGpio->ReadBit(1, &bit_value);
     
@@ -613,8 +620,9 @@ TEST_F(ViperboardGpioBTest, ReadBitHighSuccess)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     bool bit_value = true;
     uint8_t data[5] = {0x00, 0x10, 0x00, 0x00, 0x00};
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(5)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(length)));
 
     result = pGpio->ReadBit(12, &bit_value);
     
@@ -628,8 +636,9 @@ TEST_F(ViperboardGpioBTest, ReadBitIncorrectNrBytesTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     bool bit_value = true;
     uint8_t data[5] = {0x00, 0x10, 0x00, 0x00, 0x00};
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(25)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(25)));
 
     result = pGpio->ReadBit(12, &bit_value);
     
@@ -643,8 +652,9 @@ TEST_F(ViperboardGpioBTest, ReadBitLibusbErrorTransactionFailure)
     IGPIO_PortB* pGpio = pViper->GetGpioPortBInterface();
     bool bit_value = true;
     uint8_t data[5] = {0x00, 0x10, 0x00, 0x00, 0x00};
+    int16_t length = 5;
     
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(5u), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+5), Return(LIBUSB_ERROR_NO_DEVICE)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xDD), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(data, data+length), Return(LIBUSB_ERROR_NO_DEVICE)));
 
     result = pGpio->ReadBit(12, &bit_value);
     
