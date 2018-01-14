@@ -3,6 +3,7 @@
 #include "viperboard.h"
 #include "i2c_master_viperboard.h"
 #include "gpio_portb.h"
+#include "gpio_porta.h"
 
 namespace Viper
 {
@@ -147,6 +148,16 @@ namespace Viper
         }
         
         return gpio_portb;
+    }
+    
+    IGPIO_PortA* Viperboard::GetGpioPortAInterface(void)
+    {
+        if (nullptr == gpio_porta)
+        {
+            gpio_porta = new GpioPortAViperboard(usbdevicehandle);
+        }
+        
+        return gpio_porta;
     }
     
     ViperResult_t UsbResult2ViperResult(int usbresult)

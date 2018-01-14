@@ -25,14 +25,7 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
                                   EXECUTABLE
                                       ${CMAKE_CURRENT_BINARY_DIR}/run_all_unit_tests.sh
                                   DEPENDENCIES
-                                      test_portable_cypress_device
-                                      test_portable_cypress_control_endpoint
-                                      test_portable_cypress_bulk_endpoint
-                                      test_libusb_device
-                                      test_libusb_endpoint
-                                      test_libusb_interface
-                                      test_libusb_device_watcher
-                                      test_utilities
+                                      test_viperboard
                                       )
     endif()
 endif()
