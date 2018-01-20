@@ -20,8 +20,8 @@ namespace Viper
         public:
             GpioPortAViperboard(libusb_device_handle* usbdevicehandle);
             virtual ~GpioPortAViperboard(void);
-            ViperResult_t SetPWMMode(uint8_t bit, uint16_t level, uint16_t clock);
-            
+            ViperResult_t SetPWMMode(uint8_t bit, uint8_t level, uint8_t clock);
+
         private:
             libusb_device_handle* usbdevicehandle = nullptr;
     };

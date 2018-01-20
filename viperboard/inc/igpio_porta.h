@@ -11,7 +11,7 @@ namespace Viper
     {
         
         public:
-            virtual ViperResult_t SetPWMMode(uint8_t bit, uint16_t level, uint16_t clock)=0;
+            virtual ViperResult_t SetPWMMode(uint8_t bit, uint8_t level, uint8_t clock)=0;
     };
 }
 

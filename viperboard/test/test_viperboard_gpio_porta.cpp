@@ -97,7 +97,7 @@ TEST_F(ViperboardGpioATest, SetPWMModeSuccess)
     IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
     uint8_t bit = 4;
     uint8_t level = 55;
-    uint16_t clock = 0x7853;
+    uint8_t clock = 0x73;
     uint16_t length = 11;
     uint8_t data[50] = {0xAA};
 
