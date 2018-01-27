@@ -289,7 +289,7 @@ TEST_F(ViperboardGpioATest, SetContinuousModeIncorrectBitInvalidParameter)
     ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
 }
 
-TEST_F(ViperboardGpioATest, SetPulseModeSuccess)
+TEST_F(ViperboardGpioATest, SetPulseModeInvertedSuccess)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
@@ -311,6 +311,36 @@ TEST_F(ViperboardGpioATest, SetPulseModeSuccess)
     ASSERT_EQ(t1, data[3]);
     ASSERT_EQ(t2, data[4]);
     ASSERT_EQ(0x01, data[5]);
+    ASSERT_EQ(0x00, data[6]);
+    ASSERT_EQ(0x00, data[7]);
+    ASSERT_EQ(0x00, data[8]);
+    ASSERT_EQ(0x00, data[9]);
+    ASSERT_EQ(0x00, data[10]);
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+
+TEST_F(ViperboardGpioATest, SetPulseModeNotInvertedSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 8;
+    uint8_t t1 = 2;
+    uint8_t t2 = 255;
+    uint8_t clock = 0x73;
+    uint16_t length = 11;
+    bool invert = false;
+    uint8_t data[50] = {0xAA};
+
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
+
+    result = pGpio->SetPulseMode(bit, clock, t1, t2, invert);
+
+    ASSERT_EQ(0x01, data[0]);
+    ASSERT_EQ(clock, data[1]);
+    ASSERT_EQ(bit, data[2]);
+    ASSERT_EQ(t1, data[3]);
+    ASSERT_EQ(t2, data[4]);
+    ASSERT_EQ(0x00, data[5]);
     ASSERT_EQ(0x00, data[6]);
     ASSERT_EQ(0x00, data[7]);
     ASSERT_EQ(0x00, data[8]);
