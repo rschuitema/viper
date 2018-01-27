@@ -48,6 +48,23 @@ namespace Viper
 
 	ViperResult_t GpioPortAViperboard::SetContinuousMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2)
 	{
+        int bytes_transferred = 0;
+	    uint8_t buffer[11];
+
+	    buffer[0] = 0x00;
+	    buffer[1] = clock;
+	    buffer[2] = bit;
+	    buffer[3] = t1;
+	    buffer[4] = t2;
+	    buffer[5] = 0x00;
+	    buffer[6] = 0x00;
+	    buffer[7] = 0x00;
+	    buffer[8] = 0x00;
+	    buffer[9] = 0x00;
+	    buffer[10] = 0x00;
+	    
+	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xED, 0x0000, 0x0000, buffer, 11, 1000);
+		
         return VIPER_SUCCESS;
 	}
 }
