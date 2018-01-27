@@ -77,5 +77,10 @@ namespace Viper
 
         return VIPER_SUCCESS;
 	}
+
+	ViperResult_t GpioPortAViperboard::SetPulseMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2, bool invert)
+	{
+        return VIPER_SUCCESS;
+	}
 }
 

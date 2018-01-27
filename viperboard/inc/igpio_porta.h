@@ -12,6 +12,7 @@ namespace Viper
         
         public:
             virtual ViperResult_t SetContinuousMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2)=0;
+            virtual ViperResult_t SetPulseMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2, bool invert)=0;
             virtual ViperResult_t SetPWMMode(uint8_t bit, uint8_t level, uint8_t clock)=0;
     };
 }
