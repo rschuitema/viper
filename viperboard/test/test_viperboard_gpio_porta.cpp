@@ -408,3 +408,18 @@ TEST_F(ViperboardGpioATest, SetPulseModeLibusbErrorTransactionFailure)
     ASSERT_EQ(0x00, data[10]);
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
+
+TEST_F(ViperboardGpioATest, SetPulseModeIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 16;
+    uint8_t t1 = 2;
+    uint8_t t2 = 255;
+    uint8_t clock = 0x73;
+    bool invert = false;
+
+    result = pGpio->SetPulseMode(bit, clock, t1, t2, invert);
+
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
