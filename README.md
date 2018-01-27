@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/rschuitema/viper.svg?branch=develop)](https://travis-ci.org/rschuitema/viper)
+
 # viper
 Repository for a library that can interact with the viperboard of Nano River Technologies.
 
