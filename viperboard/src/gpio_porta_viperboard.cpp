@@ -88,7 +88,7 @@ namespace Viper
 	    buffer[2] = bit;
 	    buffer[3] = t1;
 	    buffer[4] = t2;
-	    buffer[5] = 0x01;
+	    buffer[5] = invert ? 0x01 : 0x00;
 	    buffer[6] = 0x00;
 	    buffer[7] = 0x00;
 	    buffer[8] = 0x00;
