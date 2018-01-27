@@ -45,5 +45,10 @@ namespace Viper
 	    
         return VIPER_SUCCESS;
 	}
+
+	ViperResult_t GpioPortAViperboard::SetContinuousMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2)
+	{
+        return VIPER_SUCCESS;
+	}
 }
 
