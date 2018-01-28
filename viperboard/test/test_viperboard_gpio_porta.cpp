@@ -536,7 +536,7 @@ TEST_F(ViperboardGpioATest, SetDigitalOutputModeIncorrectBitInvalidParameter)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
-    uint8_t bit = 8;
+    uint8_t bit = 16;
     bool value = false;
 
     result = pGpio->SetDigitalOutputMode(bit, value);
