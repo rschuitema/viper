@@ -122,7 +122,7 @@ namespace Viper
 	    buffer[4] = 0x00;
 	    buffer[5] = 0x00;
 	    buffer[6] = 0x00;
-	    buffer[7] = 0x01;
+	    buffer[7] = value ? 0x01 : 0x00;
 	    buffer[8] = 0x00;
 	    buffer[9] = 0x00;
 	    buffer[10] = 0x00;
