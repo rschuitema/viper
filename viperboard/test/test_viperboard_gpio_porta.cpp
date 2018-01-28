@@ -531,3 +531,15 @@ TEST_F(ViperboardGpioATest, SetDigitalOutputModeLibusbErrorTransactionFailure)
     ASSERT_EQ(0x00, data[10]);
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
+
+TEST_F(ViperboardGpioATest, SetDigitalOutputModeIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 8;
+    bool value = false;
+
+    result = pGpio->SetDigitalOutputMode(bit, value);
+
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
