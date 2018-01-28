@@ -24,6 +24,7 @@ namespace Viper
             ViperResult_t SetContinuousMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2);
             ViperResult_t SetPulseMode(uint8_t bit, uint8_t clock, uint8_t t1, uint8_t t2, bool invert);
             ViperResult_t SetPWMMode(uint8_t bit, uint8_t level, uint8_t clock);
+            virtual ViperResult_t SetDigitalOutputMode(uint8_t bit, bool value);
 
         private:
             libusb_device_handle* usbdevicehandle = nullptr;
