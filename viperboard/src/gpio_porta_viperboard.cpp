@@ -147,6 +147,11 @@ namespace Viper
         int bytes_transferred = 0;
 	    uint8_t buffer[11];
 
+	    if (bit >15)
+	    {
+	        return VIPER_INVALID_PARAMETER;
+	    }
+    
 	    buffer[0] = 0x04;
 	    buffer[1] = clock;
 	    buffer[2] = bit;
