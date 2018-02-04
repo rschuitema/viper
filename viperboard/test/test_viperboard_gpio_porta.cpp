@@ -812,3 +812,16 @@ TEST_F(ViperboardGpioATest, GetDigitalInputLibusbErrorSecondCallTransactionFailu
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
     ASSERT_FALSE(value);
 }
+
+TEST_F(ViperboardGpioATest, GetDigitalInputIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 16;
+    bool value = false;
+
+    result = pGpio->GetDigitalInput(bit, &value);
+
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+    ASSERT_FALSE(value);
+}
