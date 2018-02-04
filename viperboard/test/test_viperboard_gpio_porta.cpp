@@ -730,7 +730,7 @@ TEST_F(ViperboardGpioATest, GetDigitalInputIncorrecNrBytesSecondCallTransactionF
     IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
     uint8_t bit = 8;
     uint16_t length = 11;
-    bool value = true;
+    bool value = false;
     uint8_t data[50] = {0xAA};
     uint8_t returndata[11] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
