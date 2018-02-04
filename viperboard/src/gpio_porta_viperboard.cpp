@@ -173,6 +173,11 @@ namespace Viper
 
         return VIPER_SUCCESS;
 	}
+
+	ViperResult_t GpioPortAViperboard::GetDigitalInput(uint8_t bit, bool* value)
+	{
+        return VIPER_SUCCESS;
+	}
 }
 
 	
