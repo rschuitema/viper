@@ -645,9 +645,10 @@ TEST_F(ViperboardGpioATest, GetDigitalInputTrueSuccess)
     uint16_t length = 11;
     bool value = false;
     uint8_t data[50] = {0xAA};
+    uint8_t returndata[11] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00};
 
     EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(returndata, returndata+length), Return(length)));
 
     result = pGpio->GetDigitalInput(bit, &value);
 
@@ -663,4 +664,5 @@ TEST_F(ViperboardGpioATest, GetDigitalInputTrueSuccess)
     ASSERT_EQ(0x00, data[9]);
     ASSERT_EQ(0x00, data[10]);
     ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_TRUE(value);
 }
