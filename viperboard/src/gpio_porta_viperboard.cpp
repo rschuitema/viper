@@ -194,7 +194,7 @@ namespace Viper
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xED, 0x0000, 0x0000, buffer, 11, 1000);
 	    bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xED, 0x0000, 0x0000, buffer, 11, 1000);
 
-		*value = true;
+		*value = (buffer[9] == 0x01) ? true: false;
         return VIPER_SUCCESS;
 	}
 }
