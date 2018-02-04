@@ -141,5 +141,11 @@ namespace Viper
 
         return VIPER_SUCCESS;
 	}
+
+	ViperResult_t GpioPortAViperboard::SetDigitalInputMode(uint8_t bit, uint8_t clock)
+	{
+        return VIPER_SUCCESS;
+	}
 }
 
+	
