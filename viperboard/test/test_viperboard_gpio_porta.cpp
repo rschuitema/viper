@@ -892,7 +892,7 @@ TEST_F(ViperboardGpioATest, SetInterruptInputModeFallinEdgeSucces)
     bool risefall = false;
     uint8_t data[50] = {0xAA};
 
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(67)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
 
     result = pGpio->SetInterruptInputMode(bit, risefall, clock);
 
