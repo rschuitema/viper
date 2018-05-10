@@ -221,7 +221,7 @@ namespace Viper
 	    uint8_t buffer[11];
 
 	    buffer[0] = 0x05;
-	    buffer[1] = 0x78;
+	    buffer[1] = clock;
 	    buffer[2] = bit;
 	    buffer[3] = 0x00;
 	    buffer[4] = 0x00;
