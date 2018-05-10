@@ -222,7 +222,7 @@ namespace Viper
 
 	    buffer[0] = 0x05;
 	    buffer[1] = 0x78;
-	    buffer[2] = 0x08;
+	    buffer[2] = bit;
 	    buffer[3] = 0x00;
 	    buffer[4] = 0x00;
 	    buffer[5] = 0x00;
