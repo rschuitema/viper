@@ -966,3 +966,16 @@ TEST_F(ViperboardGpioATest, SetInterruptInputModeDifferrentClockSucces)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardGpioATest, SetInterruptInputModeIncorrectBitInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 16;
+    bool risefall = false;
+    uint8_t clock = 0x34;
+
+    result = pGpio->SetInterruptInputMode(bit, risefall, clock);
+
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
+
