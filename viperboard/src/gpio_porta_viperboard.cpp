@@ -228,7 +228,7 @@ namespace Viper
 	    buffer[5] = 0x00;
 	    buffer[6] = 0x00;
 	    buffer[7] = 0x00;
-	    buffer[8] = 0x01;
+	    buffer[8] = risefall ? 0x01 : 0x00;
 	    buffer[9] = 0x00;
 	    buffer[10] = 0x00;
 	    
