@@ -938,3 +938,31 @@ TEST_F(ViperboardGpioATest, SetInterruptInputModeDifferrentBitSucces)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardGpioATest, SetInterruptInputModeDifferrentClockSucces)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    IGPIO_PortA* pGpio = pViper->GetGpioPortAInterface();
+    uint8_t bit = 5;
+    uint16_t length = 11;
+    uint8_t clock = 0x34;
+    bool risefall = false;
+    uint8_t data[50] = {0xAA};
+
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xED), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
+
+    result = pGpio->SetInterruptInputMode(bit, risefall, clock);
+
+    ASSERT_EQ(0x05, data[0]);
+    ASSERT_EQ(clock, data[1]);
+    ASSERT_EQ(bit, data[2]);
+    ASSERT_EQ(0x00, data[3]);
+    ASSERT_EQ(0x00, data[4]);
+    ASSERT_EQ(0x00, data[5]);
+    ASSERT_EQ(0x00, data[6]);
+    ASSERT_EQ(0x00, data[7]);
+    ASSERT_EQ(0x00, data[8]);
+    ASSERT_EQ(0x00, data[9]);
+    ASSERT_EQ(0x00, data[10]);
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+
