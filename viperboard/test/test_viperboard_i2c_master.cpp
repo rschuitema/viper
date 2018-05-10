@@ -108,3 +108,17 @@ TEST_F(ViperboardI2CMasterTest, SetFrequency6MHZSuccess)
     ASSERT_EQ(1u, bus_frequency);
 }
 
+TEST_F(ViperboardI2CMasterTest, SetFrequencyIncorrectNrBytesTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    I2CFrequency_t frequency = I2C_FREQUENCY_6MHZ;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    uint8_t bus_frequency = 0u;
+
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE1), Eq(0x0000), Eq(0x0000), _, Eq(1u), Eq(1000u))).WillOnce(DoAll(SaveArgPointee<5>(&bus_frequency), Return(34)));
+    
+    result = pI2CMaster->SetFrequency(frequency);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+}
+
