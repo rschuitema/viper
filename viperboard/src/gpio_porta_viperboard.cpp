@@ -171,12 +171,12 @@ namespace Viper
 	        return VIPER_TRANSACTION_FAILURE;
 	    } 
 
-        return VIPER_SUCCESS;
+            return VIPER_SUCCESS;
 	}
 
 	ViperResult_t GpioPortAViperboard::GetDigitalInput(uint8_t bit, bool* value)
 	{
-        int bytes_transferred = 0;
+            int bytes_transferred = 0;
 	    uint8_t buffer[11];
 
 	    if (bit >15)
@@ -210,9 +210,18 @@ namespace Viper
 	        return VIPER_TRANSACTION_FAILURE;
 	    } 
 
-		*value = (buffer[9] == 0x01) ? true: false;
-        return VIPER_SUCCESS;
+            *value = (buffer[9] == 0x01) ? true: false;
+            
+            return VIPER_SUCCESS;
 	}
+
+	ViperResult_t GpioPortAViperboard::SetInterruptInputMode(uint8_t bit, bool risefall, uint8_t clock)
+	{
+            int bytes_transferred = 0;
+	    uint8_t buffer[11];
+
+            return VIPER_SUCCESS;
+        }
 }
 
 	

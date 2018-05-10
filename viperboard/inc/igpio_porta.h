@@ -17,6 +17,7 @@ namespace Viper
             virtual ViperResult_t SetDigitalOutputMode(uint8_t bit, bool value)=0;
             virtual ViperResult_t SetDigitalInputMode(uint8_t bit, uint8_t clock)=0;
             virtual ViperResult_t GetDigitalInput(uint8_t bit, bool* value)=0;
+            virtual ViperResult_t SetInterruptInputMode(uint8_t bit, bool risefall, uint8_t clock)=0;
     };
 }
 
