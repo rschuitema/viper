@@ -215,3 +215,22 @@ TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceNotConnectedSuccess)
     ASSERT_EQ(VIPER_SUCCESS, result);
     ASSERT_FALSE(deviceList[0]);
 }
+
+TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceIncorrecNrBytesFirstCallTransactionFailure)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    bool deviceList[MAX_DEVICES] = {false};
+    uint8_t data[50] = {0xAA};
+    uint8_t returndata[12] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x22};
+    uint16_t length = 7;
+
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE2), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(90)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xE9), Eq(0x0000), Eq(0x0000), _, Eq(12), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(returndata, returndata+12), Return(12)));
+
+    result = pI2CMaster->ScanConnectedDevices(deviceList, 1);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+    ASSERT_FALSE(deviceList[0]);
+}
+
