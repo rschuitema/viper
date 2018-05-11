@@ -54,7 +54,8 @@ namespace Viper
             bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xE2, 0x0000, 0x0000, buffer, 7, 1000u);
 
             bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
-            plist[i] = true;
+            
+            plist[i] = (buffer[11] == 0x22) ? true: false;
         }
 
         
