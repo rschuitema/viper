@@ -122,3 +122,17 @@ TEST_F(ViperboardI2CMasterTest, SetFrequencyIncorrectNrBytesTransactionFailure)
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
 }
 
+#define MAX_DEVICES (128)
+
+TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    bool deviceList[MAX_DEVICES] = {false};
+
+
+    result = pI2CMaster->ScanConnectedDevices(deviceList, MAX_DEVICES);
+    
+    ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
+}
+
