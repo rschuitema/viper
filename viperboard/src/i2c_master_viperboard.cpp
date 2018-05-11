@@ -48,10 +48,16 @@ namespace Viper
         buffer[10] = 0x00;
         buffer[11] = 0xff;
 
-        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xE2, 0x0000, 0x0000, buffer, 7, 1000u);
+        for(uint8_t i = 0; i < length; i++)
+        {
+            buffer[0] = i;
+            bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xE2, 0x0000, 0x0000, buffer, 7, 1000u);
 
-        bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
-        plist[0] = true;
+            bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
+            plist[i] = true;
+        }
+
+        
 
         return VIPER_SUCCESS;
     }
