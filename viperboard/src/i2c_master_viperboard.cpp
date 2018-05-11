@@ -33,6 +33,7 @@ namespace Viper
     {
         int bytes_transferred = 0;
         uint8_t buffer[12];
+        ViperResult_t result = VIPER_SUCCESS;
 
 
         buffer[0] = 0x00;
@@ -48,19 +49,24 @@ namespace Viper
         buffer[10] = 0x00;
         buffer[11] = 0xff;
 
-        for(uint8_t i = 0; i < length; i++)
+        for(uint8_t i = 0; (result == VIPER_SUCCESS) && (i < length); i++)
         {
             buffer[0] = i;
             bytes_transferred = libusb_control_transfer(usbdevicehandle, 0x40, 0xE2, 0x0000, 0x0000, buffer, 7, 1000u);
-
-            bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
+            if (7 == bytes_transferred)
+            {
+                bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
             
-            plist[i] = (buffer[11] == 0x22) ? true: false;
+                plist[i] = (buffer[11] == 0x22) ? true: false;
+            }
+            else
+            {
+                result = VIPER_TRANSACTION_FAILURE;
+            }
+
         }
 
-        
-
-        return VIPER_SUCCESS;
+        return result;
     }
     
     ViperResult_t I2CMasterViperboard::Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)
