@@ -226,7 +226,6 @@ TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceIncorrecNrBytesFirstCallTr
     uint16_t length = 7;
 
     EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE2), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).WillOnce(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(90)));
-    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xE9), Eq(0x0000), Eq(0x0000), _, Eq(12), Eq(1000u))).WillOnce(DoAll(SetArrayArgument<5>(returndata, returndata+12), Return(12)));
 
     result = pI2CMaster->ScanConnectedDevices(deviceList, 1);
     
