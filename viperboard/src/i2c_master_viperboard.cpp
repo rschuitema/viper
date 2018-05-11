@@ -29,7 +29,7 @@ namespace Viper
         return VIPER_SUCCESS;
     }
 
-    ViperResult_t I2CMasterViperboard::ScanConnectedDevices(uint8_t* plist, int16_t length)
+    ViperResult_t I2CMasterViperboard::ScanConnectedDevices(bool* plist, uint8_t length)
     {
         return VIPER_OTHER_ERROR;
     }
