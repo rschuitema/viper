@@ -162,3 +162,31 @@ TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceSuccess)
     ASSERT_EQ(true, deviceList[0]);
 }
 
+TEST_F(ViperboardI2CMasterTest, ScanMultipleConnectedDeviceSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    bool deviceList[MAX_DEVICES] = {false};
+    uint8_t data[50] = {0xAA};
+    uint8_t returndata[12] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x22};
+    uint16_t length = 7;
+
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0x40), Eq(0xE2), Eq(0x0000), Eq(0x0000), _, Eq(length), Eq(1000u))).Times(3).WillRepeatedly(DoAll(WithArg<5>(SaveArrayPointee(data, length)), Return(length)));
+    EXPECT_CALL(*pLibUsbMock, control_transfer(_, Eq(0xC0), Eq(0xE9), Eq(0x0000), Eq(0x0000), _, Eq(12), Eq(1000u))).Times(3).WillRepeatedly(DoAll(SetArrayArgument<5>(returndata+10, returndata+11), Return(12)));
+
+    result = pI2CMaster->ScanConnectedDevices(deviceList, 3);
+    
+    ASSERT_EQ(0x02, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x00, data[2]);
+    ASSERT_EQ(0x00, data[3]);
+    ASSERT_EQ(0x00, data[4]);
+    ASSERT_EQ(0x00, data[5]);
+    ASSERT_EQ(0x06, data[6]);
+  
+    ASSERT_EQ(VIPER_SUCCESS, result);
+    ASSERT_EQ(true, deviceList[0]);
+    ASSERT_EQ(true, deviceList[1]);
+    ASSERT_EQ(true, deviceList[2]);
+}
+
