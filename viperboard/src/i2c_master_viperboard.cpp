@@ -35,6 +35,11 @@ namespace Viper
         uint8_t buffer[12];
         ViperResult_t result = VIPER_SUCCESS;
 
+        if (length > 127)
+        {
+            return VIPER_INVALID_PARAMETER;
+        }
+        
 
         buffer[0] = 0x00;
         buffer[1] = 0x00;
@@ -77,7 +82,7 @@ namespace Viper
     
     ViperResult_t I2CMasterViperboard::Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)
     {
-        return VIPER_OTHER_ERROR;
+        return VIPER_SUCCESS;
     }
     
     ViperResult_t I2CMasterViperboard::Read(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)
