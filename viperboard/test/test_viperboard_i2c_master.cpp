@@ -250,3 +250,36 @@ TEST_F(ViperboardI2CMasterTest, ScanOneConnectedDeviceIncorrecNrBytesSecondCallT
     ASSERT_EQ(VIPER_TRANSACTION_FAILURE, result);
     ASSERT_FALSE(deviceList[0]);
 }
+
+TEST_F(ViperboardI2CMasterTest, ScanConnectedDeviceIncorrectLengthInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    bool deviceList[MAX_DEVICES] = {false};
+    uint8_t data[50] = {0xAA};
+    uint8_t returndata[12] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x22};
+    uint16_t length = 7;
+
+    result = pI2CMaster->ScanConnectedDevices(deviceList, 128);
+    
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
+
+/*
+TEST_F(ViperboardI2CMasterTest, WriteSuccess)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    uint8_t data[50] = {0xAA};
+    uint16_t length = 7;
+    uint8_t slaveAddress = 0x48;
+    uint8_t registerAddress = 0x12;
+
+    // EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(length), Eq(transferred), Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, length)), Return(length)));
+
+    result = pI2CMaster->Write(slaveAddress, registerAddress, length, data);
+
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+*/
+
