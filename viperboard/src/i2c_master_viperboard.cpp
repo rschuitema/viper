@@ -56,8 +56,14 @@ namespace Viper
             if (7 == bytes_transferred)
             {
                 bytes_transferred = libusb_control_transfer(usbdevicehandle, 0xC0, 0xE9, 0x0000, 0x0000, buffer, 12, 1000u);
-            
-                plist[i] = (buffer[11] == 0x22) ? true: false;
+                if (12 == bytes_transferred)
+                {
+                    plist[i] = (buffer[11] == 0x22) ? true: false;
+                }
+                else
+                {
+                    result = VIPER_TRANSACTION_FAILURE;
+                }
             }
             else
             {
