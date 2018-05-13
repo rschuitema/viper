@@ -19,7 +19,7 @@ namespace Viper
 
             ViperResult_t SetFrequency(I2CFrequency_t frequency);
             ViperResult_t ScanConnectedDevices(bool* plist, uint8_t length);
-            ViperResult_t Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer);
+            ViperResult_t Write(uint8_t slave_address, uint8_t register_address, uint16_t length, uint8_t* pBuffer);
             ViperResult_t Read(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer);
             
         private:

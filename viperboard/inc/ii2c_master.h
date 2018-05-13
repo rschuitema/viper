@@ -21,7 +21,7 @@ namespace Viper
     public:
         virtual ViperResult_t SetFrequency(I2CFrequency_t frequency)=0;
         virtual ViperResult_t ScanConnectedDevices(bool* plist, uint8_t length)=0;
-        virtual ViperResult_t Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)=0;
+        virtual ViperResult_t Write(uint8_t slave_address, uint8_t register_address, uint16_t length, uint8_t* pBuffer)=0;
         virtual ViperResult_t Read(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)=0;
         
     };

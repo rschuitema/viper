@@ -80,7 +80,7 @@ namespace Viper
         return result;
     }
     
-    ViperResult_t I2CMasterViperboard::Write(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)
+    ViperResult_t I2CMasterViperboard::Write(uint8_t slave_address, uint8_t register_address, uint16_t length, uint8_t* pBuffer)
     {
         int bytes_transferred = 0;
         uint8_t buffer[512] = {0};
@@ -92,7 +92,7 @@ namespace Viper
         buffer[0] = 0x00;
         buffer[1] = 0x00;
         buffer[2] = 0x40;
-        buffer[3] = 0x0A;
+        buffer[3] = length;
         buffer[4] = 0x00;
         buffer[5] = 0x00;
         buffer[6] = 0x00;
