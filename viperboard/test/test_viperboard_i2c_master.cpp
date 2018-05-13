@@ -355,3 +355,44 @@ TEST_F(ViperboardI2CMasterTest, Write213SuccessOneTransfer)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardI2CMasterTest, Write290SuccessOneTransfer)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    
+    uint8_t data[300] = {0xAA};
+    
+    uint8_t msg[300] = {0x59};
+    uint16_t msgLength = 290;
+    uint8_t slaveAddress = 0x48;
+    uint8_t registerAddress = 0x12;
+
+    uint16_t transferLength = msgLength+9;
+    int bytesTransferred = 0;
+
+
+    memset(msg, 0x59, 300);
+    memset(data, 0xAA, 300);
+
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, transferLength)), Return(transferLength)));
+
+    result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
+
+    ASSERT_EQ(0x00, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x40, data[2]);
+    ASSERT_EQ(0x22, data[3]);
+    ASSERT_EQ(0x01, data[4]);
+    ASSERT_EQ(0x00, data[5]);
+    ASSERT_EQ(0x00, data[6]);
+    ASSERT_EQ(0x00, data[7]);
+    ASSERT_EQ(0x00, data[8]);
+    ASSERT_EQ(0x59, data[9]);
+    ASSERT_EQ(0x59, data[10]);
+    ASSERT_EQ(0x59, data[297]);
+    ASSERT_EQ(0x59, data[298]);
+    ASSERT_EQ(0xAA, data[299]);
+
+    ASSERT_EQ(VIPER_SUCCESS, result);
+}
+
