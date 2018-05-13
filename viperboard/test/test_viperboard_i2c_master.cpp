@@ -501,3 +501,20 @@ TEST_F(ViperboardI2CMasterTest, Write2048SuccessFiveTransfers)
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
 
+TEST_F(ViperboardI2CMasterTest, WriteIncorrectNrBytesReturnsInvalidParameter)
+{
+    ViperResult_t result = VIPER_OTHER_ERROR;
+    II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
+    
+    uint8_t msg[2048] = {0x59};
+    uint16_t msgLength = 2048;
+    uint8_t slaveAddress = 0x48;
+    uint8_t registerAddress = 0x12;
+
+    memset(msg, 0x59, 2048);
+
+    result = pI2CMaster->Write(slaveAddress, registerAddress, 2049, msg);
+
+    ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
+}
+
