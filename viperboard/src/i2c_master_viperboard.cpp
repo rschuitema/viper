@@ -105,7 +105,7 @@ namespace Viper
         buffer[7] = 0x00;
         buffer[8] = 0x00;
 
-        while(msg_length > 0)
+        while((msg_length > 0) && (result == VIPER_SUCCESS))
         {
             buffer[1] = (start_address & 0x00FFu);
             buffer[2] = ((start_address & 0xFF00u) >> 8u);
@@ -133,10 +133,15 @@ namespace Viper
             buffer_index += transfer_length;
 
             bytes_transferred = libusb_bulk_transfer(usbdevicehandle, 0x02, buffer, transfer_length+9, &transferred, 1000u);
+            
+            if ((transfer_length+9) != transferred)
+            {
+                result = VIPER_TRANSACTION_FAILURE;
+            }
         }
 
         
-        return VIPER_SUCCESS;
+        return result;
     }
     
     ViperResult_t I2CMasterViperboard::Read(uint8_t slave_address, uint8_t register_address, int16_t length, uint8_t* pBuffer)
