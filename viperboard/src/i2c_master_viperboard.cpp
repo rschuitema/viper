@@ -92,8 +92,8 @@ namespace Viper
         buffer[0] = 0x00;
         buffer[1] = 0x00;
         buffer[2] = 0x40;
-        buffer[3] = length;
-        buffer[4] = 0x00;
+        buffer[3] = (length & 0x00FFu);
+        buffer[4] = ((length & 0xFF00u) >> 8u);
         buffer[5] = 0x00;
         buffer[6] = 0x00;
         buffer[7] = 0x00;
