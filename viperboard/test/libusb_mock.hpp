@@ -69,7 +69,7 @@ public:
                                         uint16_t    wLength,
                                         unsigned int    timeout));
 
-    MOCK_METHOD6(bulk_transfer, int (struct libusb_device_handle *   dev_handle,
+    MOCK_METHOD6(bulk_transfer, int ( libusb_device_handle *   dev_handle,
                                      unsigned char   endpoint,
                                      unsigned char * data,
                                      int             length,
