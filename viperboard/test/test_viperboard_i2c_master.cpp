@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdexcept>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
@@ -265,21 +266,52 @@ TEST_F(ViperboardI2CMasterTest, ScanConnectedDeviceIncorrectLengthInvalidParamet
     ASSERT_EQ(VIPER_INVALID_PARAMETER, result);
 }
 
-/*
-TEST_F(ViperboardI2CMasterTest, WriteSuccess)
+
+TEST_F(ViperboardI2CMasterTest, Write10SuccessOneTransfer)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
     II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
-    uint8_t data[50] = {0xAA};
-    uint16_t length = 7;
+    
+    uint8_t data[200] = {0xAA};
+    
+    uint8_t msg[100] = {0x59};
+    uint16_t msgLength = 10;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
 
-    // EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(length), Eq(transferred), Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, length)), Return(length)));
+    uint16_t transferLength = msgLength+9;
+    int bytesTransferred = 0;
 
-    result = pI2CMaster->Write(slaveAddress, registerAddress, length, data);
+
+    memset(msg, 0x59, 100);
+    memset(data, 0xAA, 200);
+
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, transferLength)), Return(transferLength)));
+
+    result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
+
+    ASSERT_EQ(0x00, data[0]);
+    ASSERT_EQ(0x00, data[1]);
+    ASSERT_EQ(0x40, data[2]);
+    ASSERT_EQ(0x0A, data[3]);
+    ASSERT_EQ(0x00, data[4]);
+    ASSERT_EQ(0x00, data[5]);
+    ASSERT_EQ(0x00, data[6]);
+    ASSERT_EQ(0x00, data[7]);
+    ASSERT_EQ(0x00, data[8]);
+    ASSERT_EQ(0x59, data[9]);
+    ASSERT_EQ(0x59, data[10]);
+    ASSERT_EQ(0x59, data[11]);
+    ASSERT_EQ(0x59, data[12]);
+    ASSERT_EQ(0x59, data[13]);
+    ASSERT_EQ(0x59, data[14]);
+    ASSERT_EQ(0x59, data[15]);
+    ASSERT_EQ(0x59, data[16]);
+    ASSERT_EQ(0x59, data[17]);
+    ASSERT_EQ(0x59, data[18]);
+    ASSERT_EQ(0xAA, data[19]);
 
     ASSERT_EQ(VIPER_SUCCESS, result);
 }
-*/
+
 
