@@ -87,26 +87,49 @@ namespace Viper
         ViperResult_t result = VIPER_SUCCESS;
         int transferred = 0;
         int bytes_to_transfer = 0;
+        uint16_t start_address = 0x4000u;
+        uint16_t buffer_index = 0u;
+        uint16_t msg_length = 0u;
+        uint16_t transfer_length = 0u;
 
-
+        msg_length = length;
+        
         buffer[0] = 0x00;
-        buffer[1] = 0x00;
-        buffer[2] = 0x40;
-        buffer[3] = (length & 0x00FFu);
-        buffer[4] = ((length & 0xFF00u) >> 8u);
         buffer[5] = 0x00;
         buffer[6] = 0x00;
         buffer[7] = 0x00;
         buffer[8] = 0x00;
-        
-        for (int i =0; i < length; i++)
+
+        while(msg_length > 0)
         {
-            buffer[9+i] = pBuffer[i];
+            buffer[1] = (start_address & 0x00FFu);
+            buffer[2] = ((start_address & 0xFF00u) >> 8u);
             
+            if (msg_length > 503)
+            {
+                start_address += 503;
+                msg_length -= 503;
+                transfer_length = 503;
+            }
+            else
+            {
+                transfer_length = msg_length;
+                msg_length = 0;
+            }
+             
+            buffer[3] = (transfer_length & 0x00FFu);
+            buffer[4] = ((transfer_length & 0xFF00u) >> 8u);
+            
+            for (int i = 0; i < transfer_length; i++)
+            {
+                buffer[9 + i] = pBuffer[buffer_index + i];
+            }
+            
+            buffer_index += transfer_length;
+
+            bytes_transferred = libusb_bulk_transfer(usbdevicehandle, 0x02, buffer, transfer_length+9, &transferred, 1000u);
         }
 
-        bytes_to_transfer = length + 9;
-        bytes_transferred = libusb_bulk_transfer(usbdevicehandle, 0x02, buffer, bytes_to_transfer, &transferred, 1000u);
         
         return VIPER_SUCCESS;
     }
