@@ -92,6 +92,11 @@ namespace Viper
         uint16_t msg_length = 0u;
         uint16_t transfer_length = 0u;
 
+        if (length > 2048)
+        {
+            return VIPER_INVALID_PARAMETER;
+        }
+        
         msg_length = length;
         
         buffer[0] = 0x00;
