@@ -5,7 +5,12 @@ add_dependencies(usb_mock googletest)
 target_include_directories(usb_mock PUBLIC ${GTEST_INCLUDE})
 target_link_libraries(usb_mock ${GTEST_LIBRARIES})
 
-add_executable(test_viperboard test_viperboard_openclose.cpp test_viperboard_general.cpp test_viperboard_i2c_master.cpp test_viperboard_gpio_portb.cpp test_viperboard_gpio_porta.cpp)
+add_executable(test_viperboard test_viperboard_openclose.cpp 
+                               test_viperboard_general.cpp 
+                               test_viperboard_gpio_portb.cpp 
+                               test_viperboard_gpio_porta.cpp
+                               test_viperboard_i2c_master.cpp 
+                               test_viperboard_i2c_master_write.cpp)
 target_link_libraries(test_viperboard viperboard usb_mock)
 add_test(Viperboard test_viperboard)
 
