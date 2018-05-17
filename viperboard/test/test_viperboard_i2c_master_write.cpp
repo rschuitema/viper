@@ -74,7 +74,6 @@ ACTION_P2(SaveArrayPointee, pointer, length)
 }
 
 
-
 TEST_F(ViperboardI2CMasterWriteTest, Write10SuccessOneTransfer)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
@@ -88,8 +87,6 @@ TEST_F(ViperboardI2CMasterWriteTest, Write10SuccessOneTransfer)
     uint8_t registerAddress = 0x12;
 
     uint16_t transferLength = msgLength+9;
-    int bytesTransferred = 0;
-
 
     memset(msg, 0x59, 100);
     memset(data, 0xAA, 200);
@@ -135,8 +132,6 @@ TEST_F(ViperboardI2CMasterWriteTest, Write213SuccessOneTransfer)
     uint8_t registerAddress = 0x12;
 
     uint16_t transferLength = msgLength+9;
-    int bytesTransferred = 0;
-
 
     memset(msg, 0x59, 300);
     memset(data, 0xAA, 300);
@@ -173,30 +168,22 @@ TEST_F(ViperboardI2CMasterWriteTest, Write20SuccessOneTransfer)
     ViperResult_t result = VIPER_OTHER_ERROR;
     II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
     
-    uint8_t data[300] = {0xAA};
-    
     uint8_t msg[300] = {0x59};
     uint16_t msgLength = 20;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
-
     uint16_t transferLength = msgLength+9;
-    int bytesTransferred = 0;
 
-
+    uint8_t expected_header[9] =  {0x00, 0x00, 0x40, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t expected_msg[300] = {0xAA};
+    
+    memset(expected_msg, 0xAA, 300);
+    memset(expected_msg, 0x59, 29);
+    memcpy(expected_msg, expected_header, 9);
+    
     memset(msg, 0x59, 300);
-    memset(data, 0x59, 29);
-    data[0] = 0;
-    data[1] = 0;
-    data[2] = 0x40;
-    data[3] = 0x14;
-    data[4] = 0x00;
-    data[5] = 0;
-    data[6] = 0;
-    data[7] = 0;
-    data[8] = 0;
 
-    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), EqArray(data, transferLength), Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(SetArgPointee<4>(transferLength), Return(0)));
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), EqArray(expected_msg, transferLength), Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(SetArgPointee<4>(transferLength), Return(0)));
 
     result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
 
@@ -217,8 +204,6 @@ TEST_F(ViperboardI2CMasterWriteTest, Write290SuccessOneTransfer)
     uint8_t registerAddress = 0x12;
 
     uint16_t transferLength = msgLength+9;
-    int bytesTransferred = 0;
-
 
     memset(msg, 0x59, 300);
     memset(data, 0xAA, 300);
@@ -257,9 +242,6 @@ TEST_F(ViperboardI2CMasterWriteTest, Write600SuccessTwoTransfers)
     uint16_t msgLength = 600;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
-
-    int bytesTransferred = 0;
-
 
     memset(msg, 0x59, 600);
     memset(data, 0xAA, 600);
@@ -310,25 +292,15 @@ TEST_F(ViperboardI2CMasterWriteTest, Write2048SuccessFiveTransfers)
     II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
     
     uint8_t data[600] = {0xAA};
-    uint8_t data1[600] = {0xAA};
-
     uint8_t msg[2048] = {0x59};
     uint16_t msgLength = 2048;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
 
-    int bytesTransferred = 0;
-
-
     memset(msg, 0x59, 2048);
     memset(data, 0xAA, 600);
-    memset(data1, 0xAA, 600);
 
-    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(512), _, Eq(1000u))).Times(4).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data1, 512)), SetArgPointee<4>(512), Return(0)))
-                                                                                            .WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data1, 512)), SetArgPointee<4>(512), Return(0)))
-                                                                                            .WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data1, 512)), SetArgPointee<4>(512), Return(0)))
-                                                                                            .WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data1, 512)), SetArgPointee<4>(512), Return(0)));
-                                                                                      
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(512), _, Eq(1000u))).Times(4).WillRepeatedly(DoAll(SetArgPointee<4>(512), Return(0)));
     EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(45), _, Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, 45)), SetArgPointee<4>(45), Return(0)));
 
     result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
@@ -373,21 +345,16 @@ TEST_F(ViperboardI2CMasterWriteTest, WriteIncorrectNrBytesTransactionFailure)
     ViperResult_t result = VIPER_OTHER_ERROR;
     II2C_Master* pI2CMaster = pViper->GetI2CMasterInterface();
     
-    uint8_t data[300] = {0xAA};
-    
     uint8_t msg[300] = {0x59};
     uint16_t msgLength = 213;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
 
     uint16_t transferLength = msgLength+9;
-    int bytesTransferred = 0;
-
 
     memset(msg, 0x59, 300);
-    memset(data, 0xAA, 300);
 
-    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(WithArg<2>(SaveArrayPointee(data, transferLength)), SetArgPointee<4>(77),Return(0)));
+    EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), _, Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(SetArgPointee<4>(77),Return(0)));
 
     result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
 
