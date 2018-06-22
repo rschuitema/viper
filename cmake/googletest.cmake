@@ -1,37 +1,30 @@
-# This file sets up gtest, gmock and gmock_main libraries
+# Download and unpack googletest at configure time
+configure_file(googletest.cmake.in
+               ${CMAKE_BINARY_DIR}/googletest-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
 
-# We need thread support
-find_package(Threads REQUIRED)
+# Prevent GoogleTest from overriding our compiler/linker options
+# when building with Visual Studio
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include(ExternalProject)
-set(GTEST_DIR ${CMAKE_CURRENT_BINARY_DIR}/googletest-prefix/src/googletest-build/googlemock)
+# Add googletest directly to our build. This adds
+# the following targets: gtest, gtest_main, gmock
+# and gmock_main
+add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+                 ${CMAKE_BINARY_DIR}/googletest-build)
 
-ExternalProject_Add(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest
-    GIT_TAG release-1.8.0
-    CMAKE_ARGS -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-    # Disable install to not corrupt our own installer
-    INSTALL_COMMAND ""
-    BUILD_BYPRODUCTS ${GTEST_DIR}/libgmock.a
-                     ${GTEST_DIR}/libgmock_main.a
-                     ${GTEST_DIR}/gtest/libgtest.a
-)
+# Disable pthreads on Windows to prevent compilation errors
+#if(WIN32)
+#set(gtest_disable_pthreads on)
+#endif(WIN32)
 
-add_library(gtest STATIC IMPORTED)
-SET_PROPERTY(TARGET gtest PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/gtest/libgtest.a)
-
-add_library(gmock STATIC IMPORTED)
-SET_PROPERTY(TARGET gmock PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/libgmock.a)
-
-add_library(gmock_main STATIC IMPORTED)
-SET_PROPERTY(TARGET gmock_main PROPERTY IMPORTED_LOCATION ${GTEST_DIR}/libgmock_main.a)
-
-# If somebody wants to use Gtest and Gmock he needs to link against these libraries
-set(GTEST_LIBRARIES gtest gmock gmock_main pthread)
-
-# If somebody wants to use Gtest and Gmock he needs to add the following directories to its include path
-ExternalProject_Get_Property(googletest source_dir)
-set(GTEST_INCLUDE ${source_dir}/googletest/include
-                  ${source_dir}/googlemock/include)
-
+# The gtest/gmock targets carry header search path
+# dependencies automatically when using CMake 2.8.11 or
+# later. Otherwise we have to add them here ourselves.
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+    include_directories("${gtest_SOURCE_DIR}/include"
+                        "${gmock_SOURCE_DIR}/include")
+endif()

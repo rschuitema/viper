@@ -8,12 +8,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(
-    VIPERBOARD_HEADER_FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/viperboard.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/i2c_master_viperboard.h
-)
-
-set(
     VIPERBOARD_SOURCE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/viperboard.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/i2c_master_viperboard.cpp
@@ -24,5 +18,18 @@ set(
 add_library(viperboard ${VIPERBOARD_SOURCE_FILES})
 target_link_libraries(viperboard ${LIBUSB_LIBRARIES})
 
-add_subdirectory(test)
+
+
+set(
+    VIPERBOARD_TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_viperboard_openclose.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_viperboard_general.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_viperboard_gpio_porta.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_viperboard_i2c_master.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/test_viperboard_i2c_master_write.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/libusb_mock.cpp
+)
+
+add_executable(test_viperboard ${VIPERBOARD_TEST_FILES})
+target_link_libraries(test_viperboard viperboard gtest gmock gmock_main)
 
