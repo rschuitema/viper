@@ -163,6 +163,8 @@ MATCHER_P2(EqArray, buffer, length, "")
     return std::equal(arg, arg + length, buffer);
 }
 
+#define MSG_HEADER_LENGTH (9)
+
 TEST_F(ViperboardI2CMasterWriteTest, Write20SuccessOneTransfer)
 {
     ViperResult_t result = VIPER_OTHER_ERROR;
@@ -172,18 +174,18 @@ TEST_F(ViperboardI2CMasterWriteTest, Write20SuccessOneTransfer)
     uint16_t msgLength = 20;
     uint8_t slaveAddress = 0x48;
     uint8_t registerAddress = 0x12;
-    uint16_t transferLength = msgLength+9;
+    uint16_t transferLength = msgLength + MSG_HEADER_LENGTH;
 
-    uint8_t expected_header[9] =  {0x00, 0x00, 0x40, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00};
+    uint8_t expected_header[MSG_HEADER_LENGTH] =  {0x00, 0x00, 0x40, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00};
     uint8_t expected_msg[300] = {0xAA};
     
     memset(expected_msg, 0xAA, 300);
-    memset(expected_msg, 0x59, 29);
-    memcpy(expected_msg, expected_header, 9);
-    
+    memset(expected_msg, 0x59, transferLength);
+    memcpy(expected_msg, expected_header, MSG_HEADER_LENGTH);
     memset(msg, 0x59, 300);
 
     EXPECT_CALL(*pLibUsbMock, bulk_transfer(_, Eq(0x02), EqArray(expected_msg, transferLength), Eq(transferLength), _, Eq(1000u))).WillOnce(DoAll(SetArgPointee<4>(transferLength), Return(0)));
+
 
     result = pI2CMaster->Write(slaveAddress, registerAddress, msgLength, msg);
 
